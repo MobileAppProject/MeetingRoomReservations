@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="be.vdab.project.meetingroomreservations" >
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".Activity.LoadingActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name=".Activity.ReservationsActivity"
+            android:label="@string/ReservationTitle"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name=".Activity.MeetingRoomsActivity"
+            android:label="@string/MeetingRoomsTitle"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+
+
+
+        <provider android:authorities="be.vdab.project.meetingroomreservations.ReservationsContentProvider"
+            android:name="be.vdab.project.meetingroomreservations.db.ReservationsContentProvider">
+        </provider>
+
+        <receiver android:name=".Service.RefreshReceiver">
+            <intent-filter>
+                <action android:name="REFRESH_DATA"/>
+            </intent-filter>
+        </receiver>
+
+
+        <service android:name=".Service.DataRefreshService"/>
+    </application>
+
+</manifest>
