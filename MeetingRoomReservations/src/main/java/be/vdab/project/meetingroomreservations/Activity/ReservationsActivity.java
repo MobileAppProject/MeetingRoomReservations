@@ -1,12 +1,12 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 import be.vdab.project.meetingroomreservations.Fragment.ReservationFragment;
 import be.vdab.project.meetingroomreservations.R;
 
-public class ReservationsActivity extends FragmentActivity implements ReservationFragment.Callbacks{
+public class ReservationsActivity extends Activity implements ReservationFragment.Callbacks{
 
 	private boolean dualPaneMode;
 	

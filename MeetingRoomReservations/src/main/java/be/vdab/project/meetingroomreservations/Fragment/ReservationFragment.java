@@ -36,7 +36,7 @@ public class ReservationFragment extends ListFragment implements
 		
 		getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
 		
-		String[] columns = { DB.RESERVATIONS.ID, DB.RESERVATIONS.beginDate }; // from
+		String[] columns = { DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate }; // from
 		int[] items = { R.id.meetingRoom, R.id.beginDate}; // to
        
 		adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.reservations_list_item,null,columns,items,0);
@@ -73,7 +73,7 @@ public class ReservationFragment extends ListFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate};
+		String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, };
 		
 		String selection = null;
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),

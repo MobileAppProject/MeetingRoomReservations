@@ -1,14 +1,15 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
+import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.MeetingRoomFragment;
 import be.vdab.project.meetingroomreservations.R;
 
-public class MeetingRoomsActivity extends FragmentActivity implements MeetingRoomFragment.Callbacks{
+public class MeetingRoomsActivity extends Activity implements MeetingRoomFragment.Callbacks{
 
-	private boolean dualPaneMode;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +24,13 @@ public class MeetingRoomsActivity extends FragmentActivity implements MeetingRoo
 					R.id.appointment_list)).setActivateOnItemClick(true);
 		}*/
 	}
-	
-	/*@Override
+	/*
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.reservations, menu);
 		return true;
-	}
-	
+	}*/
+	/*
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -44,11 +45,11 @@ public class MeetingRoomsActivity extends FragmentActivity implements MeetingRoo
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
+	}*/
 
 	@Override
-	public void onAppointmentSelected(Long id) {
-		if(dualPaneMode) {
+	public void onMeetingRoomSelected(Long id) {
+		/*if(dualPaneMode) {
 			Bundle arguments = new Bundle();
 			arguments.putLong(Constants.APPOINTMENT_ID, id);
 			AppointmentDetailFragment fragment = new AppointmentDetailFragment();
@@ -56,12 +57,12 @@ public class MeetingRoomsActivity extends FragmentActivity implements MeetingRoo
 			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 			transaction.replace(R.id.appointment_detail_container, fragment);
 			transaction.commit();
-		} else {
-			Intent intent = new Intent(getApplicationContext(), AppointmentDetailActivity.class);
-			intent.putExtra(Constants.APPOINTMENT_ID, id);
+		} else {*/
+			Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
+			intent.putExtra(Constants.MEETINGROOM_ID, id);
 			startActivity(intent);
 		}
 		
-	}*/
+	//}
 
 }

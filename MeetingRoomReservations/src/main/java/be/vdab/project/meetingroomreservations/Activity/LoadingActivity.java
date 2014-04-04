@@ -42,8 +42,8 @@ public class LoadingActivity extends Activity {
 
 		@Override
 	    protected void onPostExecute(String value) {
-			Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
-            //Intent intent = new Intent(getApplicationContext(), MeetingRoomsActivity.class);
+			//Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MeetingRoomsActivity.class);
 			startActivity(intent);
 			finish();
 	    }
@@ -87,7 +87,7 @@ public class LoadingActivity extends Activity {
 
                     values.put(DB.MEETINGROOMS.name, meetingRoom.getName());
 
-                    getContentResolver().insert(ReservationsContentProvider.CONTENT_URI_RESERVATION, values);
+                    getContentResolver().insert(ReservationsContentProvider.CONTENT_URI_MEETINGROOM, values);
                 }
             }
         } catch (Exception e) {

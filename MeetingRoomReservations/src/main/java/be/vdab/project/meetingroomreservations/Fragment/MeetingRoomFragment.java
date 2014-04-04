@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
@@ -38,32 +39,33 @@ public class MeetingRoomFragment extends ListFragment implements
 		
 //		String[] columns = { DB.MEETINGROOMS.ID, DB.MEETINGROOMS.name };
 //		int[] items = { R.id.meetingRoom, R.id.beginDate};
-        String[] columns = {DB.MEETINGROOMS.ID, DB.MEETINGROOMS.name}; // from
+        String[] columns = {DB.MEETINGROOMS.name}; // from
         int[] items = { R.id.meetingRoomName}; // to
+
+
        
 		adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(),R.layout.meetingrooms_list_item,null,columns,items,0);
-
-		ListView list = (ListView) view.findViewById(android.R.id.list);
+        ListView list = (ListView) view.findViewById(android.R.id.list);
 		list.setAdapter(adapter);
 		
 		list.setEmptyView(view.findViewById(android.R.id.empty));
 		
-//		list.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view, int position,
-//					long id) {
-//				listener.onAppointmentSelected(id);
-//			}
-//		});
-		
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+		@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				listener.onMeetingRoomSelected(id);
+			}
+		});
+
 		return view;
 	}
 	
-/*	@Override
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		listener.onAppointmentSelected(id);
+		listener.onMeetingRoomSelected(id);
 	}
 	
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
@@ -71,11 +73,11 @@ public class MeetingRoomFragment extends ListFragment implements
 		list.setChoiceMode(
 				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
 						: ListView.CHOICE_MODE_NONE);
-	}*/
+	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = { DB.MEETINGROOMS.ID, DB.MEETINGROOMS.name};
+		String[] projection = { DB.MEETINGROOMS.ID, DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name};
 		
 		String selection = null;
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
@@ -113,13 +115,13 @@ public class MeetingRoomFragment extends ListFragment implements
 	}
 	
 	public interface Callbacks {
-		//public void onAppointmentSelected(Long id);
+		public void onMeetingRoomSelected(Long id);
 	}
 
 	private static Callbacks dummyListener = new Callbacks() {
-		/*@Override
-		public void onAppointmentSelected(Long id) {
-		}*/
+		@Override
+		public void onMeetingRoomSelected(Long id) {
+		}
 	};
 
 }
