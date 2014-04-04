@@ -13,7 +13,10 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_reservations);
+
+
 		
 		/*if (findViewById(R.id.reservation_detail_container) != null) {
 			dualPaneMode = true;

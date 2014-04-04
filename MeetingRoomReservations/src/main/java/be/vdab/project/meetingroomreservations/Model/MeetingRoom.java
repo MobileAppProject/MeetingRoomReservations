@@ -5,17 +5,17 @@ package be.vdab.project.meetingroomreservations.Model;
  */
 public class MeetingRoom {
 
-    private String id;
-    //private String meetingRoomId;
+    //private String id;
+    private String meetingRoomId;
     private String name;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
 
     public String getName() {
         return name;
@@ -25,11 +25,11 @@ public class MeetingRoom {
         this.name = name;
     }
 
-  /*  public String getMeetingRoomId() {
+    public String getMeetingRoomId() {
         return meetingRoomId;
     }
 
     public void setMeetingRoomId(String meetingRoomId) {
         this.meetingRoomId = meetingRoomId;
-    }*/
+    }
 }

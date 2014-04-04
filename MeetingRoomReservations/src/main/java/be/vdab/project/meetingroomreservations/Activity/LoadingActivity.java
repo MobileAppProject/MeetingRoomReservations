@@ -21,6 +21,7 @@ public class LoadingActivity extends Activity {
 	private Reservation[] reservations;
 	private MeetingRoom[] meetingRooms;
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,10 +34,10 @@ public class LoadingActivity extends Activity {
 		
 		@Override
 		protected String doInBackground(Integer... params) {
-            Log.e("begin downloading","");
+            Log.e("begin downloading","from LoadingActivity");
 	        downloadReservations();
 	        downloadMeetingRooms();
-            Log.e("end downloading","");
+            Log.e("end downloading","from LoadingActivity");
 	        return null;
 		}
 
@@ -60,10 +61,10 @@ public class LoadingActivity extends Activity {
             if(reservations != null) {
                 for (Reservation reservation : reservations) {
                     ContentValues values = new ContentValues();
-                    values.put(DB.RESERVATIONS.reservationId, reservation.getId());
+                    values.put(DB.RESERVATIONS.reservationId, reservation.getReservationId());
+                    values.put(DB.RESERVATIONS.meetingRoomId, reservation.getMeetingRoomId());
                     values.put(DB.RESERVATIONS.beginDate, reservation.getBeginDate());
                     values.put(DB.RESERVATIONS.endDate, reservation.getEndDate());
-                    //values.put(DB.RESERVATIONS.DATE, afspraak.getDatum());
                     values.put(DB.RESERVATIONS.personName, reservation.getPersonName());
                     values.put(DB.RESERVATIONS.description, reservation.getDescription());
                     values.put(DB.RESERVATIONS.active, reservation.getActive());
@@ -83,7 +84,7 @@ public class LoadingActivity extends Activity {
             if(meetingRooms != null) {
                 for (MeetingRoom meetingRoom : meetingRooms) {
                     ContentValues values = new ContentValues();
-                    values.put(DB.MEETINGROOMS.meetingRoomId, meetingRoom.getId());
+                    values.put(DB.MEETINGROOMS.meetingRoomId, meetingRoom.getMeetingRoomId());
 
                     values.put(DB.MEETINGROOMS.name, meetingRoom.getName());
 

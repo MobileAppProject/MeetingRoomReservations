@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +18,10 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import be.vdab.project.meetingroomreservations.R;
+import be.vdab.project.meetingroomreservations.Service.DataRefreshService;
 import be.vdab.project.meetingroomreservations.db.DB;
-import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
+
+import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_MEETINGROOM;
 
 public class MeetingRoomFragment extends ListFragment implements
 		LoaderCallbacks<Cursor> {
@@ -65,6 +70,23 @@ public class MeetingRoomFragment extends ListFragment implements
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+
+        Intent refreshIntent = new Intent(getActivity(), DataRefreshService.class);
+
+        //query arguments
+        Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
+        String[] projection = { DB.MEETINGROOMS.meetingRoomId };
+        String selection = DB.MEETINGROOMS.ID + "  = ?";
+        String[] selectionArgs  = { Long.toString(id)  };
+
+        Cursor cursor =  getActivity().getContentResolver().query(meetingRoomURI,projection, selection , selectionArgs, null );
+        cursor.moveToFirst();
+        int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
+        Log.e("TAG", "value from cursor column "+ index + ": " + cursor.getString(index));
+
+        refreshIntent.putExtra("meetingRoomId", cursor.getString(index));
+        getActivity().startService(refreshIntent);
+
 		listener.onMeetingRoomSelected(id);
 	}
 	
@@ -81,7 +103,7 @@ public class MeetingRoomFragment extends ListFragment implements
 		
 		String selection = null;
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
-				ReservationsContentProvider.CONTENT_URI_MEETINGROOM, projection, selection,
+				CONTENT_URI_MEETINGROOM, projection, selection,
 				null, null);
 		return cursorLoader;
 	}

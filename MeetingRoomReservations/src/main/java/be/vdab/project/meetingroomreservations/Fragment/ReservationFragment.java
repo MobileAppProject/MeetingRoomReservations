@@ -32,6 +32,8 @@ public class ReservationFragment extends ListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+
 		view = inflater.inflate(R.layout.fragment_reservations, container, false);
 		
 		getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
@@ -73,7 +75,7 @@ public class ReservationFragment extends ListFragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, };
+		String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate };
 		
 		String selection = null;
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
