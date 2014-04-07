@@ -163,9 +163,11 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
                 Reservation reservation = new Reservation();
                 String beginDate = makeDateTimeString(params[0],params[1]);
+                Log.e("begindate formatted: ", beginDate);
                 reservation.setBeginDate(beginDate);
                 String endDate = makeDateTimeString(params[0], params[2]);
                 reservation.setEndDate(endDate);
+                Log.e("enddate formatted: ", endDate);
                 reservation.setPersonName(params[2]);
                 reservation.setDescription(params[3]);
                 Log.e("meeting room id van den intent", getIntent().getExtras().getString(Constants.MEETINGROOM_ID));
@@ -185,7 +187,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
             Log.e("time:",time);
 
 
-            return date+time;
+            return date+"T"+time+":00.000Z";
         }
 
         @Override

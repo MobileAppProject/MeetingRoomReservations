@@ -33,7 +33,19 @@ public class DatePickerDialogFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        listener.onDateSelected(year + "-" + (month + 1 )+ "-" + day);
+        String s = ""+year + "-";
+        if(month < 9){
+            s+="0";
+        }
+        s+=month+1 + "-";
+        if(day < 10){
+            s+="0";
+        }
+
+        s+=day;
+
+
+        listener.onDateSelected(s);
     }
 
     @Override

@@ -40,7 +40,16 @@ public class TimePickerDialogFragment extends DialogFragment
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        listener.onTimeSelected(hourOfDay + ":" + minute);
+        String s = "";
+        if(hourOfDay < 10){
+            s+="0";
+        }
+        s+=hourOfDay + ":";
+        if(minute < 10){
+            s+="0";
+        }
+        s+=minute;
+        listener.onTimeSelected(s);
     }
 
 }
