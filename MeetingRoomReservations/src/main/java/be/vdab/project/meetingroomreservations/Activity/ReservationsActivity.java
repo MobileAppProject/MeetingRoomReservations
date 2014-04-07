@@ -1,8 +1,12 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.ReservationFragment;
 import be.vdab.project.meetingroomreservations.R;
 
@@ -26,30 +30,32 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 					R.id.appointment_list)).setActivateOnItemClick(true);
 		}*/
 	}
-	
-	/*@Override
+
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.reservations, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_add:
-			Intent intent = new Intent(getApplicationContext(), AddAppointmentActivity.class);
+		case R.id.action_add_reservation:
+			Intent intent = new Intent(getApplicationContext(), AddReservationActivity.class);
+            intent.putExtra(Constants.MEETINGROOM_ID, getIntent().getExtras().getString(Constants.MEETINGROOM_ID));
 			startActivity(intent);
 			return true;
-		case R.id.action_settings:
+		/*case R.id.action_settings:
 			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
 			startActivity(settingsIntent);
-			return true;
+			return true;*/
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	@Override
+	/*@Override
 	public void onAppointmentSelected(Long id) {
 		if(dualPaneMode) {
 			Bundle arguments = new Bundle();

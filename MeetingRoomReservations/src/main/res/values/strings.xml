@@ -12,4 +12,14 @@
     <string name="no_meetingrooms">geen vergaderzalen</string>
     <string name="MeetingRoomsTitle">Vergaderzalen</string>
 
+
+    <!-- AddReservationActivity -->
+    <string name="add_reservation_name">Naam van persoon</string>
+    <string name="add_reservation_description">Omschrijving</string>
+    <string name="add_reservation_end_time">Eind uur</string>
+    <string name="add_reservation_begin_time">Begin uur</string>
+    <string name="add_reservation_date">Datum</string>
+    <string name="add_reservation_save">Save reservation</string>
+    <string name="AddReservationTitle">Nieuwe reservatie</string>
+
 </resources>

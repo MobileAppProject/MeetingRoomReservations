@@ -24,13 +24,13 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 					R.id.appointment_list)).setActivateOnItemClick(true);
 		}*/
 	}
-	/*
-	@Override
+
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.reservations, menu);
+		getMenuInflater().inflate(R.menu.reservations, menu); à
 		return true;
-	}*/
-	/*
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

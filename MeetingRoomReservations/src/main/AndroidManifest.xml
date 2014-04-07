@@ -32,6 +32,12 @@
             android:label="@string/MeetingRoomsTitle"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
+        <activity
+            android:name=".Activity.AddReservationActivity"
+            android:label="@string/AddReservationTitle"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+
 
 
 

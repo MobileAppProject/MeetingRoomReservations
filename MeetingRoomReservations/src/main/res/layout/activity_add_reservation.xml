@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+   >
+
+    <TextView
+        android:id="@+id/add_reservation_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_reservation_date"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/add_reservation_begin_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_reservation_begin_time"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/add_reservation_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_reservation_end_time"
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:id="@+id/add_reservation_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_reservation_name"
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:id="@+id/add_reservation_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_reservation_description"
+        android:layout_margin="10dp"/>
+
+    <Button
+        android:id="@+id/add_reservation_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_reservation_save"/>
+
+
+</LinearLayout>

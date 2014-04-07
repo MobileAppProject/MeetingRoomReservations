@@ -31,7 +31,7 @@ public class DataRefreshService extends IntentService {
 
     protected void onHandleIntent(Intent intent) {
         Log.e(TAG, "started downloading data");
-        int id = intent.getExtras().getInt("meetingRoomId");
+        String id = intent.getExtras().getString("meetingRoomId");
         Log.e(TAG, "selected id: " + id);
         downloadReservations("/"+intent.getExtras().get("meetingRoomId"));
         downloadMeetingRooms();
