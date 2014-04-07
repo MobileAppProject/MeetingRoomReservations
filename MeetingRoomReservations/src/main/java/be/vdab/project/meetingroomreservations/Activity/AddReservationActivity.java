@@ -174,7 +174,9 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 reservation.setMeetingRoomId(getIntent().getExtras().getString(Constants.MEETINGROOM_ID));
 
 
-                restTemplate.postForObject("http://192.168.56.1:8080/restSprintStarter/data/addReservation", reservation, String.class);
+
+
+                restTemplate.postForObject("http://192.168.56.1:8080/restSprintStarter/data/reservations/addReservation", reservation, String.class);
 
             } catch (Exception e) {
                 e.printStackTrace();
