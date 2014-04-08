@@ -9,7 +9,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +60,7 @@ public class MeetingRoomFragment extends ListFragment implements
 		@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				listener.onMeetingRoomSelected(id);
+				listener.onMeetingRoomSelected(id, "");
 			}
 		});
 
@@ -76,21 +75,24 @@ public class MeetingRoomFragment extends ListFragment implements
 
         //query arguments
         Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
-        String[] projection = { DB.MEETINGROOMS.meetingRoomId };
+        String[] projection = { DB.MEETINGROOMS.meetingRoomId, DB.MEETINGROOMS.name };
         String selection = DB.MEETINGROOMS.ID + "  = ?";
         String[] selectionArgs  = { Long.toString(id)  };
 
         Cursor cursor =  getActivity().getContentResolver().query(meetingRoomURI,projection, selection , selectionArgs, null );
         cursor.moveToFirst();
         int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
-        Log.e("TAG", "value from cursor column "+ index + ": " + cursor.getString(index));
+        //Log.e("TAG", "value from cursor column " + index + ": " + cursor.getString(index)); // error on this log ???
+        int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
         String meetingRoomIdString = cursor.getString(index);
+        String meetingRoomNameString = cursor.getString(indexName);
 
         refreshIntent.putExtra("meetingRoomId", meetingRoomIdString);
+
         cursor.close(); //fixme: no clue if we need to do this??
         getActivity().startService(refreshIntent);
 
-		listener.onMeetingRoomSelected(Long.parseLong(meetingRoomIdString));
+		listener.onMeetingRoomSelected(Long.parseLong(meetingRoomIdString), meetingRoomNameString);
 	}
 	
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
@@ -140,12 +142,12 @@ public class MeetingRoomFragment extends ListFragment implements
 	}
 	
 	public interface Callbacks {
-		public void onMeetingRoomSelected(Long id);
+		public void onMeetingRoomSelected(Long id, String meetingRoomName);
 	}
 
 	private static Callbacks dummyListener = new Callbacks() {
 		@Override
-		public void onMeetingRoomSelected(Long id) {
+		public void onMeetingRoomSelected(Long id, String meetingRoomName) {
 		}
 	};
 

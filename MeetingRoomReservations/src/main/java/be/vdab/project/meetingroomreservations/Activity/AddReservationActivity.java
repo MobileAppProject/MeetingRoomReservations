@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +22,6 @@ import be.vdab.project.meetingroomreservations.Dialogs.DatePickerDialogFragment;
 import be.vdab.project.meetingroomreservations.Dialogs.TimePickerDialogFragment;
 import be.vdab.project.meetingroomreservations.Model.MeetingRoom;
 import be.vdab.project.meetingroomreservations.R;
-import be.vdab.project.meetingroomreservations.db.DB;
-
-import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_MEETINGROOM;
 
 /**
  * Created by jeansmits on 7/04/14.
@@ -45,6 +40,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
     TextView descriptionView;
     Button saveButton;
     String savedMeetingRoomId;
+    String savedMeetingRoomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +54,9 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         if(b!=null)
         {
             savedMeetingRoomId = "" + b.get(Constants.MEETINGROOM_ID);
+            savedMeetingRoomName = "" + b.get(Constants.MEETINGROOM_NAME);
             Log.e("savedMeetingRoomId in AddReservationActivity",savedMeetingRoomId);
+            Log.e("savedMeetingRoomName in AddReservationActivity", savedMeetingRoomName);
 
         }
         else{
@@ -190,39 +188,39 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
 
-                Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
-                String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
-                String selection = DB.MEETINGROOMS.meetingRoomId + "  = ?";
-                Log.e("testestestestestest", "testest");
-                String[] selectionArgs  = { (savedMeetingRoomId)};
-
-                Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
-                if(getContentResolver() == null){
-                    Log.e("waaah","contentresolver is null");
-                }
-                cursor.moveToFirst();
-                int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
-                int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
-                Log.e("cursor indexname and indexID. Should be 0 and 1", "indexName: " + indexName + ", indexID: " + indexID);
-
-
-                String name;
-                String id;
-                //TODO: stop using dummy data and fix this issue
-                if(cursor.moveToFirst()){ // moveToFirst returns false if the cursor is empty
-                    name = cursor.getString(indexName);
-                    id = cursor.getString(indexID);
-                    cursor.close();
-                }
-                else{
-                    Log.e("Personalized error: ", "Problem with cursor, will not retrieve the required data but filled variables with dummy data! Problem occured in the AddReservationActivity class.");
-                    name="RudyRoom";
-                    id="1";
-                }
+//                Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
+//                String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
+//                String selection = DB.MEETINGROOMS.meetingRoomId + "  = ?";
+//                Log.e("testestestestestest", "testest");
+//                String[] selectionArgs  = { (savedMeetingRoomId)};
+//
+//                Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
+//                if(getContentResolver() == null){
+//                    Log.e("waaah","contentresolver is null");
+//                }
+//                cursor.moveToFirst();
+//                int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
+//                int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
+//                Log.e("cursor indexname and indexID. Should be 0 and 1", "indexName: " + indexName + ", indexID: " + indexID);
+//
+//
+//                String name;
+//                String id;
+//                //TODO: stop using dummy data and fix this issue
+//                if(cursor.moveToFirst()){ // moveToFirst returns false if the cursor is empty
+//                    name = cursor.getString(indexName);
+//                    id = cursor.getString(indexID);
+//                    cursor.close();
+//                }
+//                else{
+//                    Log.e("Personalized error: ", "Problem with cursor, will not retrieve the required data but filled variables with dummy data! Problem occured in the AddReservationActivity class.");
+//                    name="RudyRoom";
+//                    id="1";
+//                }
 
                 MeetingRoom meetingRoom = new MeetingRoom();
-                meetingRoom.setMeetingRoomId(id);
-                meetingRoom.setName(name);
+                meetingRoom.setMeetingRoomId(savedMeetingRoomId);
+                meetingRoom.setName(savedMeetingRoomName);
 
 
 

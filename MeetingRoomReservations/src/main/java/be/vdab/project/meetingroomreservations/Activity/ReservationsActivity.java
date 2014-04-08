@@ -45,8 +45,10 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 		case R.id.action_add_reservation:
 			Intent intent = new Intent(getApplicationContext(), AddReservationActivity.class);
             String tempId = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+            String tempName =""+ getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
             Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempId);
             intent.putExtra(Constants.MEETINGROOM_ID, tempId);
+            intent.putExtra(Constants.MEETINGROOM_NAME, tempName);
 			startActivity(intent);
 			return true;
 

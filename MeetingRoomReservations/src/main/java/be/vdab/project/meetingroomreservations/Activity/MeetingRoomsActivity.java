@@ -49,7 +49,7 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 	}*/
 
 	@Override
-	public void onMeetingRoomSelected(Long id) {
+	public void onMeetingRoomSelected(Long id, String meetingRoomName) {
 		/*if(dualPaneMode) {
 			Bundle arguments = new Bundle();
 			arguments.putLong(Constants.APPOINTMENT_ID, id);
@@ -61,7 +61,8 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 		} else {*/
 			Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
 			intent.putExtra(Constants.MEETINGROOM_ID, id);
-            Log.e("MeetingRoomActivity onMeetingRoomSelected: ", Long.toString(id));
+            intent.putExtra(Constants.MEETINGROOM_NAME, meetingRoomName);
+            Log.e("MeetingRoomActivity onMeetingRoomSelected: ", Long.toString(id) + ", " + meetingRoomName);
 			startActivity(intent);
 		}
 		
