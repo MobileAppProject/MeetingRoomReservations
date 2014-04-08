@@ -33,6 +33,7 @@ public class MeetingRoomFragment extends ListFragment implements
 	private SimpleCursorAdapter adapter;
 	
 	private View view;
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,12 +84,13 @@ public class MeetingRoomFragment extends ListFragment implements
         cursor.moveToFirst();
         int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
         Log.e("TAG", "value from cursor column "+ index + ": " + cursor.getString(index));
+        String meetingRoomIdString = cursor.getString(index);
 
-        refreshIntent.putExtra("meetingRoomId", cursor.getString(index));
+        refreshIntent.putExtra("meetingRoomId", meetingRoomIdString);
         cursor.close(); //fixme: no clue if we need to do this??
         getActivity().startService(refreshIntent);
 
-		listener.onMeetingRoomSelected(id);
+		listener.onMeetingRoomSelected(Long.parseLong(meetingRoomIdString));
 	}
 	
 	public void setActivateOnItemClick(boolean activateOnItemClick) {

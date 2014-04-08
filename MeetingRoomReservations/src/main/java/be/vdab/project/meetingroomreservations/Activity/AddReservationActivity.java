@@ -192,9 +192,9 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
                 Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
                 String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
-                String selection = DB.MEETINGROOMS.ID + "  = ?";
+                String selection = DB.MEETINGROOMS.meetingRoomId + "  = ?";
                 Log.e("testestestestestest", "testest");
-                String[] selectionArgs  = { savedMeetingRoomId};
+                String[] selectionArgs  = { (savedMeetingRoomId)};
 
                 Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
                 if(getContentResolver() == null){
@@ -203,13 +203,13 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 cursor.moveToFirst();
                 int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
                 int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
-
+                Log.e("cursor indexname and indexID. Should be 0 and 1", "indexName: " + indexName + ", indexID: " + indexID);
 
 
                 String name;
                 String id;
                 //TODO: stop using dummy data and fix this issue
-                if(cursor.moveToFirst()){
+                if(cursor.moveToFirst()){ // moveToFirst returns false if the cursor is empty
                     name = cursor.getString(indexName);
                     id = cursor.getString(indexID);
                     cursor.close();
