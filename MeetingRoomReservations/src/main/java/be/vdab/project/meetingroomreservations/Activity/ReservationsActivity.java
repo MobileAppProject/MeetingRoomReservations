@@ -3,6 +3,7 @@ package be.vdab.project.meetingroomreservations.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -43,13 +44,12 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 		switch (item.getItemId()) {
 		case R.id.action_add_reservation:
 			Intent intent = new Intent(getApplicationContext(), AddReservationActivity.class);
-            intent.putExtra(Constants.MEETINGROOM_ID, getIntent().getExtras().getString(Constants.MEETINGROOM_ID)); //TODO: cast exception, fixit damnit
+            String tempId = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+            Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempId);
+            intent.putExtra(Constants.MEETINGROOM_ID, tempId);
 			startActivity(intent);
 			return true;
-		/*case R.id.action_settings:
-			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
-			startActivity(settingsIntent);
-			return true;*/
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

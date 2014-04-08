@@ -18,10 +18,11 @@ import android.widget.TextView;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import be.vdab.project.meetingroomreservations.Constants;
+import be.vdab.project.meetingroomreservations.DTO.ReservationDTO;
 import be.vdab.project.meetingroomreservations.Dialogs.DatePickerDialogFragment;
 import be.vdab.project.meetingroomreservations.Dialogs.TimePickerDialogFragment;
 import be.vdab.project.meetingroomreservations.Model.MeetingRoom;
-import be.vdab.project.meetingroomreservations.DTO.ReservationDTO;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 
@@ -43,11 +44,28 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
     TextView nameView;
     TextView descriptionView;
     Button saveButton;
+    String savedMeetingRoomId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reservation);
+
+
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+
+        if(b!=null)
+        {
+            savedMeetingRoomId = "" + b.get(Constants.MEETINGROOM_ID);
+            Log.e("savedMeetingRoomId in AddReservationActivity",savedMeetingRoomId);
+
+        }
+        else{
+            Log.e("bundle extras is null", "sdfsdf");
+        }
+
+
 
         getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
 
@@ -85,15 +103,20 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 //                EditText description = (EditText) findViewById(R.id.add_reservation_description);
 
 
+                if (savedMeetingRoomId != null && !savedMeetingRoomId.equals("")) {
 
 
-
-                new SaveTask().execute(dateView.getText().toString(),
-                        startView.getText().toString(),
-                        endView.getText().toString(),
-                        nameView.getText().toString(),
-                        descriptionView.getText().toString());
+                    new SaveTask().execute(dateView.getText().toString(),
+                            startView.getText().toString(),
+                            endView.getText().toString(),
+                            nameView.getText().toString(),
+                            descriptionView.getText().toString());
+                }
+                else{
+                    Log.e("meetingroom id is null", "");
+                }
             }
+
         });
 
 
@@ -166,12 +189,18 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
+
                 Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
                 String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
                 String selection = DB.MEETINGROOMS.ID + "  = ?";
-                String[] selectionArgs  = { "1"/*Long.toString(Long.parseLong(getIntent().getExtras().getString(Constants.MEETINGROOM_ID)) )*/ }; // TODO: intent opvragen van overkoepelende klasse addreservationactivity
+                Log.e("testestestestestest", "testest");
+                String[] selectionArgs  = { savedMeetingRoomId};
 
                 Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
+                if(getContentResolver() == null){
+                    Log.e("waaah","contentresolver is null");
+                }
+                cursor.moveToFirst();
                 int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
                 int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
 
@@ -180,7 +209,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 String name;
                 String id;
                 //TODO: stop using dummy data and fix this issue
-                if( cursor != null && cursor.moveToFirst() ){
+                if(cursor.moveToFirst()){
                     name = cursor.getString(indexName);
                     id = cursor.getString(indexID);
                     cursor.close();

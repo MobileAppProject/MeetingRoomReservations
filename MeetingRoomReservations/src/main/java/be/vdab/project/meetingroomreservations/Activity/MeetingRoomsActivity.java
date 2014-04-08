@@ -3,6 +3,7 @@ package be.vdab.project.meetingroomreservations.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.MeetingRoomFragment;
@@ -60,6 +61,7 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 		} else {*/
 			Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
 			intent.putExtra(Constants.MEETINGROOM_ID, id);
+            Log.e("MeetingRoomActivity onMeetingRoomSelected: ", Long.toString(id));
 			startActivity(intent);
 		}
 		

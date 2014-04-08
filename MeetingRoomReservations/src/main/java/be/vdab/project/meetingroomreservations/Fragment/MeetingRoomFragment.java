@@ -85,6 +85,7 @@ public class MeetingRoomFragment extends ListFragment implements
         Log.e("TAG", "value from cursor column "+ index + ": " + cursor.getString(index));
 
         refreshIntent.putExtra("meetingRoomId", cursor.getString(index));
+        cursor.close(); //fixme: no clue if we need to do this??
         getActivity().startService(refreshIntent);
 
 		listener.onMeetingRoomSelected(id);
