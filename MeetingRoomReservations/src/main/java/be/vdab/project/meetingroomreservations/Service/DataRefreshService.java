@@ -51,6 +51,7 @@ public class DataRefreshService extends IntentService {
                 for (Reservation reservation : reservations) {
                     ContentValues values = new ContentValues();
                     values.put(DB.RESERVATIONS.reservationId, reservation.getReservationId());
+                    values.put(DB.RESERVATIONS.meetingRoomId, reservation.getMeetingRoomId());
                     values.put(DB.RESERVATIONS.beginDate, reservation.getBeginDate());
                     values.put(DB.RESERVATIONS.endDate, reservation.getEndDate());
                     values.put(DB.RESERVATIONS.personName, reservation.getPersonName());
@@ -60,14 +61,14 @@ public class DataRefreshService extends IntentService {
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, "error while downloading data "+ e.getMessage());
+            Log.e(TAG, "error while downloading reservation data "+ e.getMessage());
         }
     }
     private void downloadMeetingRooms() {
         try {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-            MeetingRoom[] meetingRooms = restTemplate.getForObject("http://192.168.56.1:8080/restSprintStarter/data/meetingRooms", MeetingRoom[].class);
+            MeetingRoom[] meetingRooms = restTemplate.getForObject("http://192.168.56.1:8080/restSprintStarter/data/meetingrooms", MeetingRoom[].class);
             getContentResolver().delete(ReservationsContentProvider.CONTENT_URI_MEETINGROOM, null, null);
             if(meetingRooms != null) {
                 for (MeetingRoom meetingRoom : meetingRooms) {
@@ -80,7 +81,7 @@ public class DataRefreshService extends IntentService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "error while downloading meetingRoom data "+ e.getMessage());
         }
     }
 }

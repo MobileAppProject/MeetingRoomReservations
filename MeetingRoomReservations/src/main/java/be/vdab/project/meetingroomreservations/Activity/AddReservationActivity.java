@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,11 +18,14 @@ import android.widget.TextView;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Dialogs.DatePickerDialogFragment;
 import be.vdab.project.meetingroomreservations.Dialogs.TimePickerDialogFragment;
-import be.vdab.project.meetingroomreservations.Model.Reservation;
+import be.vdab.project.meetingroomreservations.Model.MeetingRoom;
+import be.vdab.project.meetingroomreservations.DTO.ReservationDTO;
 import be.vdab.project.meetingroomreservations.R;
+import be.vdab.project.meetingroomreservations.db.DB;
+
+import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_MEETINGROOM;
 
 /**
  * Created by jeansmits on 7/04/14.
@@ -153,7 +158,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
     class SaveTask extends AsyncTask<String, Integer, String> {
 
-        Reservation[] reservations;
+        be.vdab.project.meetingroomreservations.Model.Reservation[] reservations;
 
         @Override
         protected String doInBackground(String... params) {
@@ -161,22 +166,48 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-                Reservation reservation = new Reservation();
+                Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
+                String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
+                String selection = DB.MEETINGROOMS.ID + "  = ?";
+                String[] selectionArgs  = { "1"/*Long.toString(Long.parseLong(getIntent().getExtras().getString(Constants.MEETINGROOM_ID)) )*/ }; // TODO: intent opvragen van overkoepelende klasse addreservationactivity
+
+                Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
+                int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
+                int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
+
+
+
+                String name;
+                String id;
+                //TODO: stop using dummy data and fix this issue
+                if( cursor != null && cursor.moveToFirst() ){
+                    name = cursor.getString(indexName);
+                    id = cursor.getString(indexID);
+                    cursor.close();
+                }
+                else{
+                    Log.e("Personalized error: ", "Problem with cursor, will not retrieve the required data but filled variables with dummy data! Problem occured in the AddReservationActivity class.");
+                    name="RudyRoom";
+                    id="1";
+                }
+
+                MeetingRoom meetingRoom = new MeetingRoom();
+                meetingRoom.setMeetingRoomId(id);
+                meetingRoom.setName(name);
+
+
+
+                ReservationDTO rezzy = new ReservationDTO();
+                rezzy.setMeetingRoom(meetingRoom);
                 String beginDate = makeDateTimeString(params[0],params[1]);
-                Log.e("begindate formatted: ", beginDate);
-                reservation.setBeginDate(beginDate);
+                rezzy.setBeginDate(beginDate);
                 String endDate = makeDateTimeString(params[0], params[2]);
-                reservation.setEndDate(endDate);
-                Log.e("enddate formatted: ", endDate);
-                reservation.setPersonName(params[2]);
-                reservation.setDescription(params[3]);
-                Log.e("meeting room id van den intent", getIntent().getExtras().getString(Constants.MEETINGROOM_ID));
-                reservation.setMeetingRoomId(getIntent().getExtras().getString(Constants.MEETINGROOM_ID));
+                rezzy.setEndDate(endDate);
+                rezzy.setDescription(params[4]);
+                rezzy.setPersonName(params[3]);
 
-
-
-
-                restTemplate.postForObject("http://192.168.56.1:8080/restSprintStarter/data/reservations/addReservation", reservation, String.class);
+                //TODO: Still throwing MalformedJsonException, however it works
+                restTemplate.postForObject("http://192.168.56.1:8080/restSprintStarter/data/reservations/addReservation", rezzy, String.class);
 
             } catch (Exception e) {
                 e.printStackTrace();

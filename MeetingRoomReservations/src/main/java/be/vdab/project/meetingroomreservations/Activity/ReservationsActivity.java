@@ -43,7 +43,7 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 		switch (item.getItemId()) {
 		case R.id.action_add_reservation:
 			Intent intent = new Intent(getApplicationContext(), AddReservationActivity.class);
-            intent.putExtra(Constants.MEETINGROOM_ID, getIntent().getExtras().getString(Constants.MEETINGROOM_ID));
+            intent.putExtra(Constants.MEETINGROOM_ID, getIntent().getExtras().getString(Constants.MEETINGROOM_ID)); //TODO: cast exception, fixit damnit
 			startActivity(intent);
 			return true;
 		/*case R.id.action_settings:
