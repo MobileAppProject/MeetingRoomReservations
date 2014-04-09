@@ -30,4 +30,10 @@
     <string name="reservation_detail_date">Datum</string>
     <string name="ReservationDetailTitle">Reservatie</string>
 
+
+
+    <string name="delete_confirmation_dialog_message">sure you want to delete this?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+
 </resources>

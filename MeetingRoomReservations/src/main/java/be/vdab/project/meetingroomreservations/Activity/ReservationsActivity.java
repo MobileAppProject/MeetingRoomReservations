@@ -1,6 +1,6 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,15 +11,19 @@ import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.ReservationFragment;
 import be.vdab.project.meetingroomreservations.R;
 
-public class ReservationsActivity extends Activity implements ReservationFragment.Callbacks{
+public class ReservationsActivity extends ListActivity implements ReservationFragment.Callbacks{
 
 	private boolean dualPaneMode;
-	
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_reservations);
+
+
 	}
 
 

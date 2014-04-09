@@ -4,16 +4,26 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import be.vdab.project.meetingroomreservations.Activity.LoadingActivity;
 import be.vdab.project.meetingroomreservations.Adapter.CustomCursorAdapter;
+import be.vdab.project.meetingroomreservations.Constants;
+import be.vdab.project.meetingroomreservations.Dialogs.DeleteConfirmationDialogFragment;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
@@ -21,7 +31,7 @@ import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
 import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_RESERVATION;
 
 public class ReservationFragment extends ListFragment implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, DeleteConfirmationDialogFragment.Callback {
 
 	private static final int LOADER_RESERVATIONS = 1;
 	
@@ -30,16 +40,16 @@ public class ReservationFragment extends ListFragment implements
 	private CustomCursorAdapter adapter;
 	
 	private View view;
-	
-	@Override
+
+    private String reservationIdString;
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        view = inflater.inflate(R.layout.fragment_reservations, container, false);
 
-
-		view = inflater.inflate(R.layout.fragment_reservations, container, false);
-		
-		getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
+        getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
 
 //		String[] columns = { DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate }; // from
 //		int[] items = { R.id.meetingRoom, R.id.beginDate}; // to
@@ -72,11 +82,62 @@ public class ReservationFragment extends ListFragment implements
 		
 		return view;
 	}
-	
-	@Override
+
+    @Override
+    public void onConfirm() {
+        new DeleteTask().execute();
+
+    }
+
+    @Override
+    public void onCancel() {
+        //do nothing
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.getListView().setLongClickable(true);
+        this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+
+                Toast.makeText(getActivity(), "postion: " + id, Toast.LENGTH_SHORT).show();
+
+                Uri reservationURI = CONTENT_URI_RESERVATION;
+                String[] projection = {DB.RESERVATIONS.ID, DB.RESERVATIONS.reservationId };
+                String selection = DB.RESERVATIONS.ID + "  = ?";
+                String[] selectionArgs  = { Long.toString(id)  };
+
+                Cursor cursor =  getActivity().getContentResolver().query(reservationURI,projection, selection , selectionArgs, null );
+                cursor.moveToFirst();
+
+                int index = cursor.getColumnIndex(DB.RESERVATIONS.reservationId);
+                reservationIdString = cursor.getString(index);
+                delete(reservationIdString);
+
+
+
+
+
+
+                return true;
+            }
+        });
+    }
+
+    private void delete(String meetingRoomIdString) {
+        DeleteConfirmationDialogFragment fragment = DeleteConfirmationDialogFragment.newInstance(this);
+        fragment.show(getFragmentManager(), "deleteconfirmation");
+
+
+    }
+
+
+    @Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		listener.onReservationSelected(id);
+
 	}
 	
 	/*public void setActivateOnItemClick(boolean activateOnItemClick) {
@@ -135,5 +196,31 @@ public class ReservationFragment extends ListFragment implements
 		public void onReservationSelected(Long id) {
 		}
 	};
+
+
+    class DeleteTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+
+                restTemplate.put(Constants.DATA_BASEURL + "reservations/deleteReservation/" + reservationIdString, null);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String value) {
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoadingActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+
+    }
 
 }
