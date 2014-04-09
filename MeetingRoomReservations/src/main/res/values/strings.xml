@@ -22,4 +22,12 @@
     <string name="add_reservation_save">Save reservation</string>
     <string name="AddReservationTitle">Nieuwe reservatie</string>
 
+    <!-- ReservationDetailFragment -->
+    <string name="reservation_detail_name">Naam van persoon</string>
+    <string name="reservation_detail_description">Omschrijving</string>
+    <string name="reservation_detail_end_time">Eind uur</string>
+    <string name="reservation_detail_begin_time">Begin uur</string>
+    <string name="reservation_detail_date">Datum</string>
+    <string name="ReservationDetailTitle">Reservatie</string>
+
 </resources>

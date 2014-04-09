@@ -37,6 +37,11 @@
             android:label="@string/AddReservationTitle"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
+        <activity
+            android:name=".Activity.ReservationDetailActivity"
+            android:label="@string/ReservationDetailTitle"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
 
 
 

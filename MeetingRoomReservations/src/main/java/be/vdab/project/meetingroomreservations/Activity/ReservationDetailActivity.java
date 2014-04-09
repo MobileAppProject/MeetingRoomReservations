@@ -28,9 +28,9 @@ import be.vdab.project.meetingroomreservations.R;
 /**
  * Created by jeansmits on 7/04/14.
  */
-public class AddReservationActivity extends Activity implements DatePickerDialogFragment.Callback, LoaderManager.LoaderCallbacks<Object> {
+public class ReservationDetailActivity extends Activity implements DatePickerDialogFragment.Callback, LoaderManager.LoaderCallbacks<Object> {
 
-
+// todo: everything
     private static final int LOADER_RESERVATIONS = 1;
 
     SimpleCursorAdapter adapter;

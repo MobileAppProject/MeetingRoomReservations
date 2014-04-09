@@ -20,16 +20,6 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_reservations);
-
-
-		
-		/*if (findViewById(R.id.reservation_detail_container) != null) {
-			dualPaneMode = true;
-
-			// In dual-pane mode worden items 'geactiveerd' wanneer we er op klikken
-			((ReservationFragment) getFragmentManager().findFragmentById(
-					R.id.appointment_list)).setActivateOnItemClick(true);
-		}*/
 	}
 
 
@@ -57,22 +47,22 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 		}
 	}
 
-	/*@Override
-	public void onAppointmentSelected(Long id) {
-		if(dualPaneMode) {
-			Bundle arguments = new Bundle();
-			arguments.putLong(Constants.APPOINTMENT_ID, id);
-			AppointmentDetailFragment fragment = new AppointmentDetailFragment();
-			fragment.setArguments(arguments);
-			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.appointment_detail_container, fragment);
-			transaction.commit();
-		} else {
-			Intent intent = new Intent(getApplicationContext(), AppointmentDetailActivity.class);
-			intent.putExtra(Constants.APPOINTMENT_ID, id);
+	@Override
+	public void onReservationSelected(Long id) {
+//		if(dualPaneMode) {
+//			Bundle arguments = new Bundle();
+//			arguments.putLong(Constants.APPOINTMENT_ID, id);
+//			AppointmentDetailFragment fragment = new AppointmentDetailFragment();
+//			fragment.setArguments(arguments);
+//			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//			transaction.replace(R.id.appointment_detail_container, fragment);
+//			transaction.commit();
+//		} else {
+			Intent intent = new Intent(getApplicationContext(), ReservationDetailActivity.class);
+			intent.putExtra(Constants.RESERVATION, id); // todo: send whole Reservation
 			startActivity(intent);
-		}
+
 		
-	}*/
+	}
 
 }
