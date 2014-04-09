@@ -20,10 +20,11 @@ import android.widget.Toast;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import be.vdab.project.meetingroomreservations.Activity.AddReservationActivity;
 import be.vdab.project.meetingroomreservations.Activity.LoadingActivity;
 import be.vdab.project.meetingroomreservations.Adapter.CustomCursorAdapter;
 import be.vdab.project.meetingroomreservations.Constants;
-import be.vdab.project.meetingroomreservations.Dialogs.DeleteConfirmationDialogFragment;
+import be.vdab.project.meetingroomreservations.Dialogs.DeleteOrEditConfirmationDialogFragment;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
@@ -31,7 +32,7 @@ import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
 import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_RESERVATION;
 
 public class ReservationFragment extends ListFragment implements
-		LoaderCallbacks<Cursor>, DeleteConfirmationDialogFragment.Callback {
+		LoaderCallbacks<Cursor>, DeleteOrEditConfirmationDialogFragment.Callback {
 
 	private static final int LOADER_RESERVATIONS = 1;
 	
@@ -84,9 +85,16 @@ public class ReservationFragment extends ListFragment implements
 	}
 
     @Override
-    public void onConfirm() {
+    public void onDelete() {
         new DeleteTask().execute();
 
+    }
+
+    @Override
+    public void onEdit(){
+        Intent intent = new Intent(getActivity().getApplicationContext(), AddReservationActivity.class);
+      //  intent.putExtra("reservation", );
+        startActivity(intent);
     }
 
     @Override
@@ -111,6 +119,7 @@ public class ReservationFragment extends ListFragment implements
                 Cursor cursor =  getActivity().getContentResolver().query(reservationURI,projection, selection , selectionArgs, null );
                 cursor.moveToFirst();
 
+
                 int index = cursor.getColumnIndex(DB.RESERVATIONS.reservationId);
                 reservationIdString = cursor.getString(index);
                 delete(reservationIdString);
@@ -126,7 +135,7 @@ public class ReservationFragment extends ListFragment implements
     }
 
     private void delete(String meetingRoomIdString) {
-        DeleteConfirmationDialogFragment fragment = DeleteConfirmationDialogFragment.newInstance(this);
+        DeleteOrEditConfirmationDialogFragment fragment = DeleteOrEditConfirmationDialogFragment.newInstance(this);
         fragment.show(getFragmentManager(), "deleteconfirmation");
 
 

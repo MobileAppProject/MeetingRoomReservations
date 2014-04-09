@@ -12,17 +12,18 @@ import be.vdab.project.meetingroomreservations.R;
 /**
  * Created by Yannick on 18/02/14.
  */
-public class DeleteConfirmationDialogFragment extends DialogFragment {
+public class DeleteOrEditConfirmationDialogFragment extends DialogFragment {
 
     private Callback listener;
 
     public interface Callback {
-        void onConfirm();
+        void onDelete();
         void onCancel();
+        void onEdit();
     }
 
-    public static DeleteConfirmationDialogFragment newInstance(Callback listener) {
-        DeleteConfirmationDialogFragment fragment = new DeleteConfirmationDialogFragment();
+    public static DeleteOrEditConfirmationDialogFragment newInstance(Callback listener) {
+        DeleteOrEditConfirmationDialogFragment fragment = new DeleteOrEditConfirmationDialogFragment();
         fragment.listener = listener;
         return fragment;
     }
@@ -30,17 +31,23 @@ public class DeleteConfirmationDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.delete_confirmation_dialog_message)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_or_edit_confirmation_dialog_message)
+                .setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onConfirm();
+                        listener.onDelete();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.edit, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        listener.onEdit();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         listener.onCancel();
                     }
-                });
+                })
+                ;
         return builder.create();
     }
 
