@@ -1,263 +1,95 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
-import android.app.Activity;
-import android.app.LoaderManager;
-import android.content.Intent;
-import android.content.Loader;
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.TimeZone;
+import java.util.ArrayList;
+import java.util.List;
 
 import be.vdab.project.meetingroomreservations.Constants;
-import be.vdab.project.meetingroomreservations.DTO.ReservationDTO;
-import be.vdab.project.meetingroomreservations.Dialogs.DatePickerDialogFragment;
-import be.vdab.project.meetingroomreservations.Dialogs.TimePickerDialogFragment;
-import be.vdab.project.meetingroomreservations.Model.MeetingRoom;
+import be.vdab.project.meetingroomreservations.Fragment.ReservationDetailFragment;
 import be.vdab.project.meetingroomreservations.R;
+import be.vdab.project.meetingroomreservations.db.DB;
+import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
 
 /**
  * Created by jeansmits on 7/04/14.
  */
-public class ReservationDetailActivity extends Activity implements DatePickerDialogFragment.Callback, LoaderManager.LoaderCallbacks<Object> {
+public class ReservationDetailActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-// todo: everything
-    private static final int LOADER_RESERVATIONS = 1;
+    private static final int LOADER_RESERVATION_ID = 3;
 
-    SimpleCursorAdapter adapter;
-
-    TextView dateView;
-    TextView startView;
-    TextView endView;
-    TextView nameView;
-    TextView descriptionView;
-    Button saveButton;
-    String savedMeetingRoomId;
-    String savedMeetingRoomName;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_reservation);
+        setContentView(R.layout.activity_reservation_detail);
 
+        getSupportLoaderManager().initLoader(LOADER_RESERVATION_ID, null, this);
 
-        Intent iin= getIntent();
-        Bundle b = iin.getExtras();
-
-        if(b!=null)
-        {
-            savedMeetingRoomId = "" + b.get(Constants.MEETINGROOM_ID);
-            savedMeetingRoomName = "" + b.get(Constants.MEETINGROOM_NAME);
-            Log.e("savedMeetingRoomId in AddReservationActivity",savedMeetingRoomId);
-            Log.e("savedMeetingRoomName in AddReservationActivity", savedMeetingRoomName);
-
-        }
-        else{
-            Log.e("bundle extras is null", "sdfsdf");
-        }
-
-        setTitle(savedMeetingRoomName);
-
-        getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
-
-        //modify this to retrieve saved username
-       /* Spinner doctor = (Spinner) findViewById(R.id.add_appointment_doctor);
-        String[] columns = new String[1];
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(Constants.PREFERENCES_VALUE_FIRST_NAME.equals(preferences.getString(Constants.PREFERENCES_KEY, Constants.PREFERENCES_VALUE_LAST_NAME))) {
-            columns[0] = DB.DOKTERS.FIRSTNAME;
-        } else {
-            columns[0] = DB.DOKTERS.LASTNAME;
-        }
-        int[] to = new int[] { android.R.id.text1 };*/
-
-
-
-
-        dateView = (TextView) findViewById(R.id.add_reservation_date);
-        startView = (TextView) findViewById(R.id.add_reservation_begin_time);
-        endView = (TextView) findViewById(R.id.add_reservation_end_time);
-        nameView = (EditText) findViewById(R.id.add_reservation_name);
-        descriptionView = (EditText) findViewById(R.id.add_reservation_description);
-        saveButton = (Button) findViewById(R.id.add_reservation_save);
-
-
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-//                TextView date = (TextView) findViewById(R.id.add_reservation_date);
-//                TextView start = (TextView) findViewById(R.id.add_reservation_begin_time);
-//                TextView end = (TextView) findViewById(R.id.add_reservation_end_time);
-//                EditText name = (EditText) findViewById(R.id.add_reservation_name);
-//                EditText description = (EditText) findViewById(R.id.add_reservation_description);
-
-
-                if (savedMeetingRoomId != null && !savedMeetingRoomId.equals("")) {
-
-
-                    new SaveTask().execute(dateView.getText().toString(),
-                            startView.getText().toString(),
-                            endView.getText().toString(),
-                            nameView.getText().toString(),
-                            descriptionView.getText().toString());
-                }
-                else{
-                    Log.e("meetingroom id is null", "");
-                }
-            }
-
-        });
-
-
-
-
-        dateView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialogFragment().show(getFragmentManager(), "datepicker");
-            }
-        });
-
-        startView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialogFragment.newInstance(startTimeListener).show(getFragmentManager(), "startpicker");
-            }
-        });
-
-        endView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialogFragment.newInstance(endTimeListener).show(getFragmentManager(), "endpicker");
-            }
-        });
+        viewPager = (ViewPager) findViewById(R.id.reservation_detail_viewpager);
+        Log.e("", "oncreate - viewpager: " + viewPager);
 
     }
 
     @Override
-    public void onDateSelected(String date) {
-       dateView.setText(date);
-    }
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        String[] projection = { DB.RESERVATIONS.ID}; // only ID?
 
-    TimePickerDialogFragment.Callback startTimeListener = new TimePickerDialogFragment.Callback() {
-        @Override
-        public void onTimeSelected(String time) {
-            startView.setText(time);
-        }
-    };
-
-    TimePickerDialogFragment.Callback endTimeListener = new TimePickerDialogFragment.Callback() {
-        @Override
-        public void onTimeSelected(String time) {
-            endView.setText(time);
-        }
-    };
-
-    @Override
-    public Loader<Object> onCreateLoader(int i, Bundle bundle) {
-        return null;
+        String selection = null;
+        CursorLoader cursorLoader = new CursorLoader(getApplicationContext(),
+                ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
+                null, null);
+        return cursorLoader;
     }
 
     @Override
-    public void onLoadFinished(Loader<Object> objectLoader, Object o) {
-
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        Log.e("", "onloadfinished");
+        List<Long> reservationIds = new ArrayList<Long>();
+        cursor.moveToFirst();
+        do {
+            reservationIds.add(cursor.getLong(cursor.getColumnIndex(DB.RESERVATIONS.ID)));
+        } while(cursor.moveToNext());
+        viewPager.setAdapter(new ReservationDetailPager(getSupportFragmentManager(), reservationIds));
     }
 
     @Override
-    public void onLoaderReset(Loader<Object> objectLoader) {
-
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-    class SaveTask extends AsyncTask<String, Integer, String> {
+    private class ReservationDetailPager extends FragmentStatePagerAdapter {
 
-        be.vdab.project.meetingroomreservations.Model.Reservation[] reservations;
+        List<Long> reservationIds;
 
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-
-
-//                Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
-//                String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
-//                String selection = DB.MEETINGROOMS.meetingRoomId + "  = ?";
-//                Log.e("testestestestestest", "testest");
-//                String[] selectionArgs  = { (savedMeetingRoomId)};
-//
-//                Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
-//                if(getContentResolver() == null){
-//                    Log.e("waaah","contentresolver is null");
-//                }
-//                cursor.moveToFirst();
-//                int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
-//                int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
-//                Log.e("cursor indexname and indexID. Should be 0 and 1", "indexName: " + indexName + ", indexID: " + indexID);
-//
-//
-//                String name;
-//                String id;
-//                //TODO: stop using dummy data and fix this issue
-//                if(cursor.moveToFirst()){ // moveToFirst returns false if the cursor is empty
-//                    name = cursor.getString(indexName);
-//                    id = cursor.getString(indexID);
-//                    cursor.close();
-//                }
-//                else{
-//                    Log.e("Personalized error: ", "Problem with cursor, will not retrieve the required data but filled variables with dummy data! Problem occured in the AddReservationActivity class.");
-//                    name="RudyRoom";
-//                    id="1";
-//                }
-
-                MeetingRoom meetingRoom = new MeetingRoom();
-                meetingRoom.setMeetingRoomId(savedMeetingRoomId);
-                meetingRoom.setName(savedMeetingRoomName);
-
-
-
-                ReservationDTO rezzy = new ReservationDTO();
-                rezzy.setMeetingRoom(meetingRoom);
-                String beginDate = makeDateTimeString(params[0],params[1]);
-                rezzy.setBeginDate(beginDate);
-                String endDate = makeDateTimeString(params[0], params[2]);
-                rezzy.setEndDate(endDate);
-                rezzy.setDescription(params[4]);
-                rezzy.setPersonName(params[3]);
-
-                //TODO: Still throwing MalformedJsonException, however it works
-                restTemplate.postForObject("http://192.168.56.1:8080/restSprintStarter/data/reservations/addReservation", rezzy, String.class);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
+        public ReservationDetailPager(FragmentManager fm, List<Long> reservationIds) {
+            super(fm);
+            this.reservationIds = reservationIds;
         }
 
-        private String makeDateTimeString(String date, String time) {
-            Log.e("date:",date);
-            Log.e("time:",time);
-            Log.e("timezone", TimeZone.getDefault().toString());
 
-            return date+"T"+time+":00.000Z"; //todo: + timezone: TimeZone.getDefault()
+        @Override
+        public Fragment getItem(int i) {
+            Bundle arguments = new Bundle();
+            arguments.putLong(Constants.RESERVATION_ID, reservationIds.get(i));
+            ReservationDetailFragment fragment = new ReservationDetailFragment();
+            fragment.setArguments(arguments);
+            return fragment;
         }
 
         @Override
-        protected void onPostExecute(String value) {
-            Intent intent = new Intent(getApplicationContext(), LoadingActivity.class); // todo
-            startActivity(intent);
-            finish();
+        public int getCount() {
+            return reservationIds.size();
         }
-
     }
 }

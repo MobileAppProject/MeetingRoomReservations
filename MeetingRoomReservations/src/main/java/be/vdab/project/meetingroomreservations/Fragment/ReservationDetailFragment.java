@@ -1,126 +1,155 @@
-//package be.vdab.project.meetingroomreservations.Fragment;
+package be.vdab.project.meetingroomreservations.Fragment;
+
+
+import android.content.ContentUris;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import be.vdab.project.meetingroomreservations.Constants;
+import be.vdab.project.meetingroomreservations.R;
+import be.vdab.project.meetingroomreservations.db.DB;
+import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
+
+public class ReservationDetailFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor> {
+
+    //todo: everything
+    private static final int LOADER_APPOINTMENT = 2;
+
+    private View view;
+
+    SimpleCursorAdapter adapter;
+
+    private Long reservationId;
+    private String appointmentBackendId;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments().containsKey(Constants.RESERVATION_ID)) {
+            reservationId = getArguments().getLong(Constants.RESERVATION_ID);
+        }
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_reservation_detail, container, false);
+        getLoaderManager().initLoader(LOADER_APPOINTMENT, null, this);
+        return view;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {DB.RESERVATIONS.ID, DB.RESERVATIONS.personName, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.description, DB.RESERVATIONS.active, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.reservationId};
+
+        String selection = null;
+        CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
+                ContentUris.withAppendedId(ReservationsContentProvider.CONTENT_URI_RESERVATION, reservationId), projection, selection,
+                null, null);
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> cursorLoader, Cursor cursor) {
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            TextView dateView = (TextView) view.findViewById(R.id.reservation_detail_date);
+            SimpleDateFormat dfDay = new SimpleDateFormat("E dd/MM/yyyy");
+            Date date = new Date (Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
+            dateView.setText(dfDay.format(date));
+
+            SimpleDateFormat dfHour = new SimpleDateFormat("HH:mm");
+            TextView beginView = (TextView) view.findViewById(R.id.reservation_detail_begin_time);
+            Date beginTime = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
+            beginView.setText(dfHour.format(beginTime));
+
+            TextView endView = (TextView) view.findViewById(R.id.reservation_detail_end_time);
+            Date endTime = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate))));
+            endView.setText(dfHour.format(endTime));
+
+            TextView personNameView = (TextView) view.findViewById(R.id.reservation_detail_name);
+            personNameView.setText(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)));
+
+            TextView descriptionView = (TextView) view.findViewById(R.id.reservation_detail_description);
+            descriptionView.setText(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.description)));
+
+            appointmentBackendId = cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.reservationId));
+        }
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> cursorLoader) {
+        adapter = null;
+    }
+
+   /* @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.appointment_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                DeleteConfirmationDialogFragment fragment = DeleteConfirmationDialogFragment.newInstance(this);
+                fragment.show(getFragmentManager(), "deleteconfirmation");
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }*/
 //
-//import android.app.Activity;
-//import android.app.Fragment;
-//import android.app.LoaderManager.LoaderCallbacks;
-//import android.content.CursorLoader;
-//import android.content.Loader;
-//import android.database.Cursor;
-//import android.os.Bundle;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.ListView;
-//import android.widget.SimpleCursorAdapter;
+//    @Override
+//    public void onConfirm() {
+//        new DeleteTask().execute();
+//    }
 //
-//import be.vdab.project.meetingroomreservations.R;
-//import be.vdab.project.meetingroomreservations.db.DB;
-//import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
+//    @Override
+//    public void onCancel() {
+//        //do nothing
+//    }
 //
-//public class ReservationDetailFragment extends Fragment implements
-//		LoaderCallbacks<Cursor> {
+//    class DeleteTask extends AsyncTask<String, Integer, String> {
 //
-//    //TODO: copied from reservationFragment, delete obsolete parts!!!!!
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//                RestTemplate restTemplate = new RestTemplate();
+//                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 //
-//	private static final int LOADER_RESERVATIONS = 1;
+//                restTemplate.delete("http://192.168.56.1:2403/afspraken/" + appointmentBackendId);
 //
-//	private Callbacks listener = dummyListener;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
 //
-//	private SimpleCursorAdapter adapter;
+//        @Override
+//        protected void onPostExecute(String value) {
+//            Intent intent = new Intent(getActivity().getApplicationContext(), LoadingActivity.class);
+//            startActivity(intent);
+//            getActivity().finish();
+//        }
 //
-//	private View view;
-//
-//	@Override
-//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//			Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//
-//		view = inflater.inflate(R.layout.fragment_reservation_detail, container, false);
-//
-//		getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
-//
-//		String[] columns = { DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate }; // from
-//		int[] items = { R.id.meetingRoom, R.id.beginDate}; // to
-//
-//		adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.reservations_list_item,null,columns,items,0);
-//
-//		ListView list = (ListView) view.findViewById(android.R.id.list);
-//		list.setAdapter(adapter);
-//
-//		list.setEmptyView(view.findViewById(android.R.id.empty));
-//
-////		list.setOnItemClickListener(new OnItemClickListener() {
-////
-////			@Override
-////			public void onItemClick(AdapterView<?> parent, View view, int position,
-////					long id) {
-////				listener.onReservationSelected(id);
-////			}
-////		});
-//
-//		return view;
-//	}
-//
-///*	@Override
-//	public void onListItemClick(ListView l, View v, int position, long id) {
-//		super.onListItemClick(l, v, position, id);
-//		listener.onReservationSelected(id);
-//	}
-//
-//	public void setActivateOnItemClick(boolean activateOnItemClick) {
-//		ListView list = (ListView) view.findViewById(android.R.id.list);
-//		list.setChoiceMode(
-//				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-//						: ListView.CHOICE_MODE_NONE);
-//	}*/
-//
-//	@Override
-//	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//		String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate };
-//
-//		String selection = null;
-//		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
-//				ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
-//				null, null);
-//		return cursorLoader;
-//	}
-//
-//	@Override
-//	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-//		adapter.swapCursor(cursor);
-//	}
-//
-//	@Override
-//	public void onLoaderReset(Loader<Cursor> arg0) {
-//		adapter = null;
-//	}
-//
-//	@Override
-//	public void onAttach(Activity activity) {
-//		super.onAttach(activity);
-//
-//		if (!(activity instanceof Callbacks)) {
-//			throw new IllegalStateException(
-//					"Activity must implement fragment's callbacks.");
-//		}
-//
-//		listener = (Callbacks) activity;
-//	}
-//
-//	@Override
-//	public void onDetach() {
-//		super.onDetach();
-//		listener = dummyListener;
-//	}
-//
-//	public interface Callbacks {
-//		//public void onReservationSelected(Long id);
-//	}
-//
-//	private static Callbacks dummyListener = new Callbacks() {
-//		/*@Override
-//		public void onReservationSelected(Long id) {
-//		}*/
-//	};
-//
-//}
+//    }
+
+
+}
