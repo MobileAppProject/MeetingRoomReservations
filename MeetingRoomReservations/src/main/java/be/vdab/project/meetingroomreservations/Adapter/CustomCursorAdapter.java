@@ -28,7 +28,7 @@ public class CustomCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        SimpleDateFormat df = new SimpleDateFormat("E dd/MM/yyyy"); // TODO: add day in letters, done?
+        SimpleDateFormat df = new SimpleDateFormat("E dd/MM/yyyy");
         SimpleDateFormat df2 = new SimpleDateFormat("HH:mm");
 
         TextView dateView = (TextView) view.findViewById(R.id.dateAndTime);

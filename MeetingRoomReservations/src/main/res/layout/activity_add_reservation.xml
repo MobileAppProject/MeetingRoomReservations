@@ -11,35 +11,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/add_reservation_date"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/add_reservation_begin_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/add_reservation_begin_time"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/add_reservation_end_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/add_reservation_end_time"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:gravity="center"/>
 
     <EditText
         android:id="@+id/add_reservation_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/add_reservation_name"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:gravity="center"/>
 
     <EditText
         android:id="@+id/add_reservation_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/add_reservation_description"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:gravity="center"/>
 
     <Button
         android:id="@+id/add_reservation_save"
