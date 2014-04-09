@@ -81,6 +81,7 @@ public class MeetingRoomFragment extends ListFragment implements
 
         Cursor cursor =  getActivity().getContentResolver().query(meetingRoomURI,projection, selection , selectionArgs, null );
         cursor.moveToFirst();
+
         int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
         //Log.e("TAG", "value from cursor column " + index + ": " + cursor.getString(index)); // error on this log ???
         int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
