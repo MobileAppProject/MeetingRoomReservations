@@ -59,7 +59,7 @@ public class ReservationDetailFragment extends Fragment implements
         String selection = null;
         CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
                 ContentUris.withAppendedId(ReservationsContentProvider.CONTENT_URI_RESERVATION, reservationId), projection, selection,
-                null, null);
+                null, DB.RESERVATIONS.beginDate + " ASC");
         return cursorLoader;
     }
 

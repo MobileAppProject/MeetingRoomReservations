@@ -111,32 +111,34 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
 
             //for edit:
-            savedReservationId = ""+b.get("reservationId");
-            String beginDate = "" + b.get("beginDate");
-            String endDate = "" + b.get("endDate");
-            SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat dfHourAndMinute = new SimpleDateFormat("HH:mm");
-            Date begin = new Date(Long.parseLong(beginDate));
-            GregorianCalendar beginCalendar = new GregorianCalendar();
-            beginCalendar.setTime(begin);
-            year = beginCalendar.get(Calendar.YEAR);
-            month = beginCalendar.get(Calendar.MONTH);
-            day = beginCalendar.get(Calendar.DAY_OF_MONTH);
-            beginHour = beginCalendar.get(Calendar.HOUR_OF_DAY);
-            beginMinutes = beginCalendar.get(Calendar.MINUTE);
+            if((b.get("beginDate")) != null){
+                savedReservationId = ""+b.get("reservationId");
+                String beginDate = "" + b.get("beginDate");
+                String endDate = "" + b.get("endDate");
+                SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dfHourAndMinute = new SimpleDateFormat("HH:mm");
+                Date begin = new Date(Long.parseLong(beginDate));
+                GregorianCalendar beginCalendar = new GregorianCalendar();
+                beginCalendar.setTime(begin);
+                year = beginCalendar.get(Calendar.YEAR);
+                month = beginCalendar.get(Calendar.MONTH);
+                day = beginCalendar.get(Calendar.DAY_OF_MONTH);
+                beginHour = beginCalendar.get(Calendar.HOUR_OF_DAY);
+                beginMinutes = beginCalendar.get(Calendar.MINUTE);
 
-            Date end = new Date(Long.parseLong(endDate));
-            GregorianCalendar endCalendar = new GregorianCalendar();
-            endCalendar.setTime(end);
-            endHour = endCalendar.get(Calendar.HOUR_OF_DAY);
-            endMinutes = endCalendar.get(Calendar.MINUTE);
+                Date end = new Date(Long.parseLong(endDate));
+                GregorianCalendar endCalendar = new GregorianCalendar();
+                endCalendar.setTime(end);
+                endHour = endCalendar.get(Calendar.HOUR_OF_DAY);
+                endMinutes = endCalendar.get(Calendar.MINUTE);
 
-            dateView.setText(dfDate.format(begin));
+                dateView.setText(dfDate.format(begin));
 
-            startView.setText(dfHourAndMinute.format(begin));
-            endView.setText(dfHourAndMinute.format(end));
-            nameView.setText("" + b.get("personName"));
-            descriptionView.setText("" + b.get("description"));
+                startView.setText(dfHourAndMinute.format(begin));
+                endView.setText(dfHourAndMinute.format(end));
+                nameView.setText("" + b.get("personName"));
+                descriptionView.setText("" + b.get("description"));
+            }
 
         }
         else{

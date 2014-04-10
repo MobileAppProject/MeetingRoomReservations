@@ -52,7 +52,7 @@ public class ReservationDetailActivity extends FragmentActivity implements Loade
         String selection = null;
         CursorLoader cursorLoader = new CursorLoader(getApplicationContext(),
                 ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
-                null, null);
+                null, DB.RESERVATIONS.beginDate + " ASC");
         return cursorLoader;
     }
 

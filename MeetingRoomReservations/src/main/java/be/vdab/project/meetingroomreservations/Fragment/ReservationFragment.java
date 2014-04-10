@@ -63,7 +63,7 @@ public class ReservationFragment extends ListFragment implements
         String selection = null;
         String[] selectionArgs  = null;
 
-        Cursor cursor =  getActivity().getContentResolver().query(reservationURI,projection, selection , selectionArgs, null );
+        Cursor cursor =  getActivity().getContentResolver().query(reservationURI,projection, selection , selectionArgs, "reservations.personName ASC" );
         cursor.moveToFirst();
 
 		//adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.reservations_list_item,null,columns,items,0);
@@ -186,7 +186,7 @@ public class ReservationFragment extends ListFragment implements
 		String selection = null;
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
 				ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
-				null, null);
+				null, DB.RESERVATIONS.beginDate + " ASC");
 		return cursorLoader;
 	}
 
