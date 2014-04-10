@@ -16,9 +16,16 @@ public class TimePickerDialogFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
     private Callback listener;
+    private int hour;
+    private int minute;
 
-    public static TimePickerDialogFragment newInstance(Callback listener) {
-        TimePickerDialogFragment fragment = new TimePickerDialogFragment();
+    public TimePickerDialogFragment(int hour, int minute) {
+        this.hour = hour;
+        this.minute = minute;
+    }
+
+    public static TimePickerDialogFragment newInstance(Callback listener, int hour, int minute) {
+        TimePickerDialogFragment fragment = new TimePickerDialogFragment(hour, minute);
         fragment.listener = listener;
         return fragment;
     }
@@ -30,9 +37,11 @@ public class TimePickerDialogFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        if(this.hour == 0){
+            final Calendar c = Calendar.getInstance();
+            hour = c.get(Calendar.HOUR_OF_DAY);
+            minute = c.get(Calendar.MINUTE);
+        }
 
         return new TimePickerDialog(getActivity(), this, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));

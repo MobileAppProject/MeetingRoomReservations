@@ -16,6 +16,10 @@ import android.widget.TextView;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import be.vdab.project.meetingroomreservations.Constants;
@@ -28,6 +32,8 @@ import be.vdab.project.meetingroomreservations.R;
 /**
  * Created by jeansmits on 7/04/14.
  */
+
+//TODO: Throw warning/error when/if internet access is no longer available
 public class AddReservationActivity extends Activity implements DatePickerDialogFragment.Callback, LoaderManager.LoaderCallbacks<Object> {
 
 
@@ -44,28 +50,34 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
     String savedMeetingRoomId;
     String savedMeetingRoomName;
 
+    String savedReservationId;
+
+    //variables for datepicker
+    int year;
+    int month;
+    int day;
+
+    //variables for timePickers
+    int beginHour;
+    int beginMinutes;
+    int endHour;
+    int endMinutes;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_reservation);
 
-
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
 
-        if(b!=null)
-        {
-            savedMeetingRoomId = "" + b.get(Constants.MEETINGROOM_ID);
-            savedMeetingRoomName = "" + b.get(Constants.MEETINGROOM_NAME);
-            Log.e("savedMeetingRoomId in AddReservationActivity",savedMeetingRoomId);
-            Log.e("savedMeetingRoomName in AddReservationActivity", savedMeetingRoomName);
 
-        }
-        else{
-            Log.e("bundle extras is null", "sdfsdf");
-        }
 
-        setTitle(savedMeetingRoomName);
+
+
+
 
         getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
 
@@ -82,7 +94,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
 
 
-
         dateView = (TextView) findViewById(R.id.add_reservation_date);
         startView = (TextView) findViewById(R.id.add_reservation_begin_time);
         endView = (TextView) findViewById(R.id.add_reservation_end_time);
@@ -91,26 +102,73 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         saveButton = (Button) findViewById(R.id.add_reservation_save);
 
 
+        if(b!=null)
+        {
+            savedMeetingRoomId = "" + b.get(Constants.MEETINGROOM_ID);
+            savedMeetingRoomName = "" + b.get(Constants.MEETINGROOM_NAME);
+            Log.e("savedMeetingRoomId in AddReservationActivity",savedMeetingRoomId);
+            Log.e("savedMeetingRoomName in AddReservationActivity", savedMeetingRoomName);
+
+
+            //for edit:
+            savedReservationId = ""+b.get("reservationId");
+            String beginDate = "" + b.get("beginDate");
+            String endDate = "" + b.get("endDate");
+            SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dfHourAndMinute = new SimpleDateFormat("HH:mm");
+            Date begin = new Date(Long.parseLong(beginDate));
+            GregorianCalendar beginCalendar = new GregorianCalendar();
+            beginCalendar.setTime(begin);
+            year = beginCalendar.get(Calendar.YEAR);
+            month = beginCalendar.get(Calendar.MONTH);
+            day = beginCalendar.get(Calendar.DAY_OF_MONTH);
+            beginHour = beginCalendar.get(Calendar.HOUR_OF_DAY);
+            beginMinutes = beginCalendar.get(Calendar.MINUTE);
+
+            Date end = new Date(Long.parseLong(endDate));
+            GregorianCalendar endCalendar = new GregorianCalendar();
+            endCalendar.setTime(end);
+            endHour = endCalendar.get(Calendar.HOUR_OF_DAY);
+            endMinutes = endCalendar.get(Calendar.MINUTE);
+
+            dateView.setText(dfDate.format(begin));
+
+            startView.setText(dfHourAndMinute.format(begin));
+            endView.setText(dfHourAndMinute.format(end));
+            nameView.setText("" + b.get("personName"));
+            descriptionView.setText("" + b.get("description"));
+
+        }
+        else{
+            Log.e("bundle extras is null", "sdfsdf");
+        }
+
+        setTitle(savedMeetingRoomName);
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-//                TextView date = (TextView) findViewById(R.id.add_reservation_date);
-//                TextView start = (TextView) findViewById(R.id.add_reservation_begin_time);
-//                TextView end = (TextView) findViewById(R.id.add_reservation_end_time);
-//                EditText name = (EditText) findViewById(R.id.add_reservation_name);
-//                EditText description = (EditText) findViewById(R.id.add_reservation_description);
 
 
                 if (savedMeetingRoomId != null && !savedMeetingRoomId.equals("")) {
+                    if(year == 0) {
 
 
-                    new SaveTask().execute(dateView.getText().toString(),
-                            startView.getText().toString(),
-                            endView.getText().toString(),
-                            nameView.getText().toString(),
-                            descriptionView.getText().toString());
+                        new SaveTask().execute(dateView.getText().toString(),
+                                startView.getText().toString(),
+                                endView.getText().toString(),
+                                nameView.getText().toString(),
+                                descriptionView.getText().toString());
+                    }
+                    else{
+                        new EditTask().execute(dateView.getText().toString(),
+                                startView.getText().toString(),
+                                endView.getText().toString(),
+                                nameView.getText().toString(),
+                                descriptionView.getText().toString());
+                    }
                 }
                 else{
                     Log.e("meetingroom id is null", "");
@@ -125,21 +183,21 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialogFragment().show(getFragmentManager(), "datepicker");
+                new DatePickerDialogFragment(year,month,day).show(getFragmentManager(), "datepicker");
             }
         });
 
         startView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialogFragment.newInstance(startTimeListener).show(getFragmentManager(), "startpicker");
+                TimePickerDialogFragment.newInstance(startTimeListener, beginHour, beginMinutes).show(getFragmentManager(), "startpicker");
             }
         });
 
         endView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialogFragment.newInstance(endTimeListener).show(getFragmentManager(), "endpicker");
+                TimePickerDialogFragment.newInstance(endTimeListener, endHour, endMinutes).show(getFragmentManager(), "endpicker");
             }
         });
 
@@ -243,6 +301,63 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
             }
             return null;
         }
+        private String makeDateTimeString(String date, String time) {
+            Log.e("date:",date);
+            Log.e("time:",time);
+            Log.e("timezone", TimeZone.getDefault().toString());
+
+            return date+"T"+time+":00.000Z"; //todo: + timezone: TimeZone.getDefault()
+        }
+
+        @Override
+        protected void onPostExecute(String value) {
+            Intent intent = new Intent(getApplicationContext(), LoadingActivity.class); // todo
+            startActivity(intent);
+            finish();
+        }
+
+    }
+
+        class EditTask extends AsyncTask<String, Integer, String> {
+
+            be.vdab.project.meetingroomreservations.Model.Reservation[] reservations;
+
+            @Override
+            protected String doInBackground(String... params) {
+                try {
+                    RestTemplate restTemplate = new RestTemplate();
+                    restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+
+                    MeetingRoom meetingRoom = new MeetingRoom();
+                    meetingRoom.setMeetingRoomId(savedMeetingRoomId);
+                    meetingRoom.setName(savedMeetingRoomName);
+
+
+
+                    ReservationDTO rezzy = new ReservationDTO();
+                    rezzy.setMeetingRoom(meetingRoom);
+                    String beginDate = makeDateTimeString(params[0],params[1]);
+                    //String[] stringParts = beginDate.split(" ");
+                    Log.e("beginDate: ", beginDate);
+
+                    rezzy.setBeginDate(beginDate);
+                    String endDate = makeDateTimeString(params[0], params[2]);
+                    //stringParts = endDate.split(" ");
+                    Log.e("endDate: ", endDate);
+                    rezzy.setEndDate(endDate);
+                    Log.e("description: ", params[4]);
+                    rezzy.setDescription(params[4]);
+                    Log.e("personName: ", params[3]);
+                    rezzy.setPersonName(params[3]);
+
+                    //TODO: Still throwing MalformedJsonException, however it works
+                    restTemplate.put("http://192.168.56.1:8080/restSprintStarter/data/reservations/updateReservation/" + savedReservationId, rezzy, String.class);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
 
         private String makeDateTimeString(String date, String time) {
             Log.e("date:",date);

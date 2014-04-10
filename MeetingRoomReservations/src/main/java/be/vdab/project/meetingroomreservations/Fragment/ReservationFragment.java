@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +25,7 @@ import be.vdab.project.meetingroomreservations.Activity.LoadingActivity;
 import be.vdab.project.meetingroomreservations.Adapter.CustomCursorAdapter;
 import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Dialogs.DeleteOrEditConfirmationDialogFragment;
+import be.vdab.project.meetingroomreservations.Model.Reservation;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
@@ -44,6 +44,7 @@ public class ReservationFragment extends ListFragment implements
 	private View view;
 
     private String reservationIdString;
+    private Reservation res;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +95,18 @@ public class ReservationFragment extends ListFragment implements
     @Override
     public void onEdit(){
         Intent intent = new Intent(getActivity().getApplicationContext(), AddReservationActivity.class);
-      //  intent.putExtra("reservation", );
+
+        String tempId = ""+getActivity().getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+        String tempName =""+ getActivity().getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
+        Log.e("MeetingRoomActivity in ReservationsActivity: ", "string so it's not null: " + tempId);
+        intent.putExtra(Constants.MEETINGROOM_ID, tempId);
+        intent.putExtra(Constants.MEETINGROOM_NAME, tempName);
+
+        intent.putExtra("beginDate", res.getBeginDate());
+        intent.putExtra("endDate", res.getEndDate());
+        intent.putExtra("personName", res.getPersonName());
+        intent.putExtra("description", res.getDescription());
+        intent.putExtra("reservationId", res.getReservationId());
         startActivity(intent);
     }
 
@@ -110,10 +122,10 @@ public class ReservationFragment extends ListFragment implements
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 
-                Toast.makeText(getActivity(), "postion: " + id, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "postion: " + id, Toast.LENGTH_SHORT).show();
 
                 Uri reservationURI = CONTENT_URI_RESERVATION;
-                String[] projection = {DB.RESERVATIONS.ID, DB.RESERVATIONS.reservationId };
+                String[] projection = {DB.RESERVATIONS.ID, DB.RESERVATIONS.reservationId, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName, DB.RESERVATIONS.description};
                 String selection = DB.RESERVATIONS.ID + "  = ?";
                 String[] selectionArgs  = { Long.toString(id)  };
 
@@ -124,6 +136,14 @@ public class ReservationFragment extends ListFragment implements
                 int index = cursor.getColumnIndex(DB.RESERVATIONS.reservationId);
                 reservationIdString = cursor.getString(index);
                 delete(reservationIdString);
+                res = new Reservation();
+                res.setReservationId(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.reservationId)));
+                res.setMeetingRoomId(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.meetingRoomId)));
+                res.setBeginDate(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)));
+                res.setEndDate(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)));
+                res.setPersonName(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)));
+                res.setDescription(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.description)));
+
 
 
 
