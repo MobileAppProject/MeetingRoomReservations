@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,6 +146,7 @@ public class ReservationFragment extends ListFragment implements
     @Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+        Log.e("test", "onlistclick");   // FIXME: DEZE LOG WRDT NIET UITGEVOERT
 		listener.onReservationSelected(id);
 
 	}

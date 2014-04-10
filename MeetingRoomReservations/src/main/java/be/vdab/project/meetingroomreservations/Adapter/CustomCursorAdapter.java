@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import be.vdab.project.meetingroomreservations.Helper.DateHelper;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 
@@ -28,16 +26,11 @@ public class CustomCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        SimpleDateFormat df = new SimpleDateFormat("E dd/MM/yyyy");
-        SimpleDateFormat df2 = new SimpleDateFormat("HH:mm");
 
         TextView dateView = (TextView) view.findViewById(R.id.dateAndTime);
         long beginDateLong = Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)));
-        Date beginDate = new Date(beginDateLong);
         long endDateLong = Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)));
-
-        Date endDate = new Date(endDateLong);
-        String beginAndEndDate = df.format(beginDate) + "\n" + df2.format(beginDate) + "  -  " + df2.format(endDate);
+        String beginAndEndDate = DateHelper.formatDayFromMilis(beginDateLong) + "\n" + DateHelper.formatHoursMinutesFromMilis(beginDateLong) + "  -  " + DateHelper.formatHoursMinutesFromMilis(endDateLong);
         dateView.setText(beginAndEndDate);
 
         TextView nameView = (TextView) view.findViewById(R.id.userName);

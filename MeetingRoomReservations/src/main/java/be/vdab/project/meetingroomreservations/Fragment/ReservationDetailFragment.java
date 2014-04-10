@@ -14,10 +14,8 @@ import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import be.vdab.project.meetingroomreservations.Constants;
+import be.vdab.project.meetingroomreservations.Helper.DateHelper;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
@@ -70,18 +68,16 @@ public class ReservationDetailFragment extends Fragment implements
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             TextView dateView = (TextView) view.findViewById(R.id.reservation_detail_date);
-            SimpleDateFormat dfDay = new SimpleDateFormat("E dd/MM/yyyy");
-            Date date = new Date (Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
-            dateView.setText(dfDay.format(date));
+            //SimpleDateFormat dfDay = new SimpleDateFormat("E dd/MM/yyyy");
+            //Date date = new Date (Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
+            dateView.setText(DateHelper.formatDayFromMilis(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)))));
 
-            SimpleDateFormat dfHour = new SimpleDateFormat("HH:mm");
+
             TextView beginView = (TextView) view.findViewById(R.id.reservation_detail_begin_time);
-            Date beginTime = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
-            beginView.setText(dfHour.format(beginTime));
+            beginView.setText(DateHelper.formatHoursMinutesFromMilis(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)))));
 
             TextView endView = (TextView) view.findViewById(R.id.reservation_detail_end_time);
-            Date endTime = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate))));
-            endView.setText(dfHour.format(endTime));
+            endView.setText(DateHelper.formatHoursMinutesFromMilis(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)))));
 
             TextView personNameView = (TextView) view.findViewById(R.id.reservation_detail_name);
             personNameView.setText(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)));

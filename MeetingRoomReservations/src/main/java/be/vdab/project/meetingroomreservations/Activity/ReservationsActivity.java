@@ -62,9 +62,10 @@ public class ReservationsActivity extends ListActivity implements ReservationFra
 //			transaction.replace(R.id.appointment_detail_container, fragment);
 //			transaction.commit();
 //		} else {
-			Intent intent = new Intent(getApplicationContext(), ReservationDetailActivity.class);
-			intent.putExtra(Constants.RESERVATION, id); // todo: send whole Reservation
-			startActivity(intent);
+        Log.e("ReservationsActivity", "onreservationSelected");
+        Intent intent = new Intent(getApplicationContext(), ReservationDetailActivity.class);
+        intent.putExtra(Constants.RESERVATION, id); // todo: send whole Reservation
+        startActivity(intent);
 
 		
 	}
