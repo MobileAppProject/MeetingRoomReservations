@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">MeetingRoomReservations</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Meetingroom Reservations</string>
 
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">testing fragment</string>

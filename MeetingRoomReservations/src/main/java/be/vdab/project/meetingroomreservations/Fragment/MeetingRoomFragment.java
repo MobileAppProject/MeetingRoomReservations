@@ -85,7 +85,7 @@ public class MeetingRoomFragment extends ListFragment implements
         int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
         //Log.e("TAG", "value from cursor column " + index + ": " + cursor.getString(index)); // error on this log ???
         int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
-        String meetingRoomIdString = cursor.getString(index);
+        String meetingRoomIdString = cursor.getString(index); // fixme: CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0, happens only sometimes
         String meetingRoomNameString = cursor.getString(indexName);
 
         refreshIntent.putExtra("meetingRoomId", meetingRoomIdString);
@@ -96,12 +96,12 @@ public class MeetingRoomFragment extends ListFragment implements
 		listener.onMeetingRoomSelected(Long.parseLong(meetingRoomIdString), meetingRoomNameString);
 	}
 	
-	public void setActivateOnItemClick(boolean activateOnItemClick) {
+	/*public void setActivateOnItemClick(boolean activateOnItemClick) {
 		ListView list = (ListView) view.findViewById(android.R.id.list);
 		list.setChoiceMode(
 				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
 						: ListView.CHOICE_MODE_NONE);
-	}
+	}*/
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
