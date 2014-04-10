@@ -247,6 +247,7 @@ public class ReservationFragment extends ListFragment implements
 
         @Override
         protected void onPostExecute(String value) {
+            //todo: use datarefreshservice instead of loadingactivity
             Intent intent = new Intent(getActivity().getApplicationContext(), LoadingActivity.class);
             startActivity(intent);
             getActivity().finish();

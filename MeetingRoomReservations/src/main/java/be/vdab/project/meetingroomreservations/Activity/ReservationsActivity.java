@@ -1,6 +1,6 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +11,7 @@ import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.ReservationFragment;
 import be.vdab.project.meetingroomreservations.R;
 
-public class ReservationsActivity extends ListActivity implements ReservationFragment.Callbacks{
+public class ReservationsActivity extends Activity implements ReservationFragment.Callbacks{
 
 	private boolean dualPaneMode;
 
@@ -64,7 +64,7 @@ public class ReservationsActivity extends ListActivity implements ReservationFra
 //		} else {
         Log.e("ReservationsActivity", "onreservationSelected");
         Intent intent = new Intent(getApplicationContext(), ReservationDetailActivity.class);
-        intent.putExtra(Constants.RESERVATION, id); // todo: send whole Reservation
+        intent.putExtra(Constants.RESERVATION_ID, id.intValue()); // todo: send whole Reservation?
         startActivity(intent);
 
 		

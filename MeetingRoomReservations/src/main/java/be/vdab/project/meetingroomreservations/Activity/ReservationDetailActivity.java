@@ -28,6 +28,7 @@ public class ReservationDetailActivity extends FragmentActivity implements Loade
 
     private static final int LOADER_RESERVATION_ID = 3;
 
+    private int currentId;
     ViewPager viewPager;
 
     @Override
@@ -36,6 +37,8 @@ public class ReservationDetailActivity extends FragmentActivity implements Loade
         setContentView(R.layout.activity_reservation_detail);
 
         getSupportLoaderManager().initLoader(LOADER_RESERVATION_ID, null, this);
+
+        currentId = getIntent().getIntExtra(Constants.RESERVATION_ID, 0);
 
         viewPager = (ViewPager) findViewById(R.id.reservation_detail_viewpager);
         Log.e("", "oncreate - viewpager: " + viewPager);
@@ -58,10 +61,28 @@ public class ReservationDetailActivity extends FragmentActivity implements Loade
         Log.e("", "onloadfinished");
         List<Long> reservationIds = new ArrayList<Long>();
         cursor.moveToFirst();
+        int viewPagerIndex = 0;
+        boolean indexFound = false;
         do {
-            reservationIds.add(cursor.getLong(cursor.getColumnIndex(DB.RESERVATIONS.ID)));
+            Long id = cursor.getLong(cursor.getColumnIndex(DB.RESERVATIONS.ID));
+            reservationIds.add(id);
+
+            if(!indexFound){
+                if(currentId == id.intValue()) {
+                    indexFound = true;
+                }
+                else
+                {
+                    viewPagerIndex++;
+                }
+
+            }
+
         } while(cursor.moveToNext());
         viewPager.setAdapter(new ReservationDetailPager(getSupportFragmentManager(), reservationIds));
+        Log.e("Viewpager currentID", ""+currentId);
+        Log.e("Viewpager viewpagerIndex", ""+viewPagerIndex);
+        viewPager.setCurrentItem(viewPagerIndex);
     }
 
     @Override
