@@ -60,6 +60,7 @@ public class DataRefreshService extends IntentService {
                     getContentResolver().insert(ReservationsContentProvider.CONTENT_URI_RESERVATION, values);
                 }
             }
+            Log.e(TAG, "Reservations downloaded.");
         } catch (Exception e) {
             Log.e(TAG, "error while downloading reservation data "+ e.getMessage());
         }
@@ -80,6 +81,7 @@ public class DataRefreshService extends IntentService {
                     getContentResolver().insert(ReservationsContentProvider.CONTENT_URI_MEETINGROOM, values);
                 }
             }
+            Log.e(TAG, "Meeting rooms downloaded.");
         } catch (Exception e) {
             Log.e(TAG, "error while downloading meetingRoom data "+ e.getMessage());
         }

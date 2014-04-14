@@ -82,18 +82,28 @@ public class MeetingRoomFragment extends ListFragment implements
         Cursor cursor =  getActivity().getContentResolver().query(meetingRoomURI,projection, selection , selectionArgs, null );
         cursor.moveToFirst();
 
-        int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
-        //Log.e("TAG", "value from cursor column " + index + ": " + cursor.getString(index)); // error on this log ???
-        int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
-        String meetingRoomIdString = cursor.getString(index); // fixme: CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0, happens only sometimes
-        String meetingRoomNameString = cursor.getString(indexName);
+        //prevent a crash from CursorIndexOutOfBoundsException
+//        try{
+            int index = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
+            //Log.e("TAG", "value from cursor column " + index + ": " + cursor.getString(index)); // error on this log ??? -- fixed?
+            int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
+            String meetingRoomIdString = cursor.getString(index); // fixme: CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0, happens only sometimes
+            String meetingRoomNameString = cursor.getString(indexName);
 
-        refreshIntent.putExtra("meetingRoomId", meetingRoomIdString);
+            refreshIntent.putExtra("meetingRoomId", meetingRoomIdString);
 
-        cursor.close(); //fixme: no clue if we need to do this??
-        getActivity().startService(refreshIntent);
+            cursor.close(); //fixme: no clue if we need to do this??
+            getActivity().startService(refreshIntent);
 
-		listener.onMeetingRoomSelected(Long.parseLong(meetingRoomIdString), meetingRoomNameString);
+            listener.onMeetingRoomSelected(Long.parseLong(meetingRoomIdString), meetingRoomNameString);
+//        }catch (CursorIndexOutOfBoundsException e)
+//        {
+//            //do nothing
+//            Log.e("Crashed with indexOutOfBoundsException on Cursor", e.getMessage());
+//        }
+
+
+
 	}
 	
 	/*public void setActivateOnItemClick(boolean activateOnItemClick) {

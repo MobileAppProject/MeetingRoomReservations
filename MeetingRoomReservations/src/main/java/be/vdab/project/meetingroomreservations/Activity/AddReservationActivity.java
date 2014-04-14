@@ -17,6 +17,7 @@ import android.widget.TextView;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +28,7 @@ import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.DTO.ReservationDTO;
 import be.vdab.project.meetingroomreservations.Dialogs.DatePickerDialogFragment;
 import be.vdab.project.meetingroomreservations.Dialogs.TimePickerDialogFragment;
+import be.vdab.project.meetingroomreservations.Helper.DateHelper;
 import be.vdab.project.meetingroomreservations.Model.MeetingRoom;
 import be.vdab.project.meetingroomreservations.R;
 
@@ -197,21 +199,58 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialogFragment(year,month,day).show(getFragmentManager(), "datepicker");
+                if(!dateView.getText().equals(""))
+                {
+                    Calendar cal = new GregorianCalendar();
+                    try {
+                       cal.setTime( DateHelper.ParseDateFromString(dateView.getText().toString()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.e("DATE: ", dateView.getText().toString());
+                    new DatePickerDialogFragment(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datepicker");
+                }else
+                {
+                    new DatePickerDialogFragment(year,month,day).show(getFragmentManager(), "datepicker");
+                }
             }
         });
 
         startView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialogFragment.newInstance(startTimeListener, beginHour, beginMinutes).show(getFragmentManager(), "startpicker");
+                if(!startView.getText().equals("")){
+                    Calendar cal = new GregorianCalendar();
+                    try {
+                        cal.setTime( DateHelper.ParseTimeFromString(startView.getText().toString()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("BEGIN TIME: ", startView.getText().toString());
+                    TimePickerDialogFragment.newInstance(startTimeListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)).show(getFragmentManager(), "startpicker");
+                }else{
+                    TimePickerDialogFragment.newInstance(startTimeListener, beginHour, beginMinutes).show(getFragmentManager(), "startpicker");
+                }
             }
         });
 
         endView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialogFragment.newInstance(endTimeListener, endHour, endMinutes).show(getFragmentManager(), "endpicker");
+                if(!endView.getText().equals("")){
+                    Calendar cal = new GregorianCalendar();
+                    try {
+                        cal.setTime( DateHelper.ParseTimeFromString(endView.getText().toString()));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("END TIME: ", endView.getText().toString());
+                    TimePickerDialogFragment.newInstance(endTimeListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)).show(getFragmentManager(), "endpicker");
+                }else{
+                    TimePickerDialogFragment.newInstance(endTimeListener, endHour, endMinutes).show(getFragmentManager(), "endpicker");
+                }
+
             }
         });
 
