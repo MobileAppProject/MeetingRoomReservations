@@ -16,6 +16,9 @@
         <provider
             android:name="com.tyczj.extendedcalendarview.CalendarProvider"
             android:authorities="com.tyczj.extendedcalendarview.calendarprovider" />
+
     </application>
+
+
 
 </manifest>

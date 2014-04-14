@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -23,6 +24,8 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Locale;
+
+//import be.vdab.project.meetingroomreservations.Ac
 
 public class ExtendedCalendarView extends RelativeLayout implements OnItemClickListener,OnCreateContextMenuListener,
 	OnClickListener{
@@ -141,6 +144,16 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 	            return calendarGesture.onTouchEvent(event);
 	        }
 	    });
+        setOnDayClickListener(new OnDayClickListener() {
+            @Override
+            public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(day.getYear(), day.getMonth()+1, day.getDay());
+                Log.e("cal: ", ""+cal.toString());
+
+
+            }
+        });
 		
 		addView(calendar);*/
 	}
@@ -172,10 +185,13 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        Log.e("onItemClick", "blargh");
 		if(dayListener != null){
+            Log.e("onItemClick", "blargh");
 			Day d = (Day) mAdapter.getItem(arg2);
 			if(d.getDay() != 0){
 				dayListener.onDayClicked(arg0, arg1, arg2, arg3,d);
+                Log.e("onItemClick", "blargh");
 
 			}
 		}
@@ -188,9 +204,11 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 	 * Set a listener for when you press on a day in the month
 	 */
 	public void setOnDayClickListener(OnDayClickListener listener){
+        Log.e("setDayClick", "blargh");
 		if(calendar != null){
 			dayListener = listener;
 			calendar.setOnItemClickListener(this);
+            Log.e("setDayClick", "blargh");
 		}
 	}
 	
@@ -216,6 +234,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 
 	@Override
 	public void onClick(View v) {
+        Log.e("onClick", "blargh");
 		switch(v.getId()){
 		case 1:
 			previousMonth();
