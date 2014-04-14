@@ -46,6 +46,16 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 			startActivity(intent);
 			return true;
 
+        case R.id.action_show_reservations_for_day:
+            Intent intentReservationsForDay = new Intent(getApplicationContext(), ReservationsForDayActivity.class);
+            String tempMeetingRoomId = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+            String tempMeetingRoomName =""+ getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
+            Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempMeetingRoomId);
+            intentReservationsForDay.putExtra(Constants.MEETINGROOM_ID, tempMeetingRoomId);
+            intentReservationsForDay.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName);
+            startActivity(intentReservationsForDay);
+            return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
