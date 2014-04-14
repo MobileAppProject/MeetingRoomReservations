@@ -51,6 +51,7 @@ public class ReservationsForDayFragment extends ListFragment implements
 
     private String reservationIdString;
     private Reservation res;
+    private Time theDay;
 
     private Boolean isInWeekView;
     private long givenDate;
@@ -239,6 +240,7 @@ public class ReservationsForDayFragment extends ListFragment implements
         String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName, DB.RESERVATIONS.description};
 
 		String selection = DB.RESERVATIONS.beginDate + "  > ? and " + DB.RESERVATIONS.beginDate + " < ?";
+        
 
         Time now, tomorrow;
         if(isInWeekView){
@@ -313,18 +315,17 @@ public class ReservationsForDayFragment extends ListFragment implements
 
         matrixCursor.addRow(new Object[] { " ",end, tomorrow.toMillis(false), "hier een reservatie aanmaken" , id++ });
 
+        Log.e("fhdsuifhfgs", "dkjfhdjkshfdfhsu");
 
-       Log.e("I THINK ADAPTER IS NULL: ", "" + adapter);
-//        if(adapter!=null){
-        adapter.swapCursor(matrixCursor); //fixme: error
-//        }
+      //  adapter = new CustomCursorReservationsForDayAdapter(getActivity(), matrixCursor, 0); //todo: use the correct rows put into a MatrixCursor and show this with the adapter
 
+
+        adapter.swapCursor(matrixCursor);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-
-        adapter = null;
+		adapter = null;
 	}
 	
 	@Override

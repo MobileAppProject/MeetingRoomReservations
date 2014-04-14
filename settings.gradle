@@ -1,1 +1,1 @@
-include ':MeetingRoomReservations'
+include ':MeetingRoomReservations', ':ExtendedCalendarViewProject:app'

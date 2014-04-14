@@ -57,6 +57,11 @@
             android:authorities="be.vdab.project.meetingroomreservations.ReservationsContentProvider" >
         </provider>
 
+        <provider
+            android:name="com.tyczj.extendedcalendarview.CalendarProvider"
+            android:authorities="com.tyczj.extendedcalendarview.calendarprovider">
+        </provider>
+
         <receiver android:name="be.vdab.project.meetingroomreservations.Service.RefreshReceiver" >
             <intent-filter>
                 <action android:name="REFRESH_DATA" />
@@ -65,7 +70,10 @@
 
         <service android:name="be.vdab.project.meetingroomreservations.Service.DataRefreshService" />
 
-
+        <activity
+            android:name="be.vdab.project.meetingroomreservations.Activity.ExtendedCalendarActivity"
+            android:label="@string/title_activity_extended_calendar" >
+        </activity>
     </application>
 
 </manifest>

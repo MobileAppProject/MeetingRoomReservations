@@ -55,6 +55,15 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
             intentReservationsForDay.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName);
             startActivity(intentReservationsForDay);
             return true;
+        case R.id.action_show_reservations_for_month:
+            Intent intentReservationsForMonth = new Intent(getApplicationContext(), ExtendedCalendarActivity.class);
+            String tempMeetingRoomId2 = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+            String tempMeetingRoomName2 =""+ getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
+            Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempMeetingRoomId2);
+            intentReservationsForMonth.putExtra(Constants.MEETINGROOM_ID, tempMeetingRoomId2);
+            intentReservationsForMonth.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName2);
+            startActivity(intentReservationsForMonth);
+            return true;
 
 		default:
 			return super.onOptionsItemSelected(item);

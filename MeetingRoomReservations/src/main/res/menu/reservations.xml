@@ -18,5 +18,11 @@
         android:icon="@drawable/ic_launcher"
         android:showAsAction="ifRoom"></item>
 
+    <item
+        android:id="@+id/action_show_reservations_for_month"
+        android:title="reservation month overview"
+        android:icon="@drawable/ic_launcher"
+        android:showAsAction="ifRoom"></item>
+
 
 </menu>

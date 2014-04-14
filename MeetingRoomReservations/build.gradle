@@ -30,4 +30,6 @@ dependencies {
     compile 'com.android.support:support-v4:18.0.0'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.viewpagerindicator:library:2.4.1@aar'
+    compile project(':ExtendedCalendarViewProject:app')
+
 }
