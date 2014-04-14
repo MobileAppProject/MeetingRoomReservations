@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="@string/pref_key_mode_list"
+        android:title="@string/pref_title_mode"
+        android:summary="@string/pref_summary_mode"
+        android:entries="@array/pref_mode_entries"
+        android:entryValues="@array/pref_mode_values"/>
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <EditTextPreference
+        android:key="@string/pref_key_mode_input"
+        android:title="@string/pref_title_mode_input"
+        android:summary="@string/pref_summary_mode_input"
+        android:selectAllOnFocus="true"
+        android:inputType="textCapWords"
+        android:capitalize="words"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+</PreferenceScreen>
