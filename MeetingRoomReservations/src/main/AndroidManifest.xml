@@ -47,6 +47,10 @@
             android:name="be.vdab.project.meetingroomreservations.Activity.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name="be.vdab.project.meetingroomreservations.Activity.ReservationsForDayActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
 
         <provider
             android:name="be.vdab.project.meetingroomreservations.db.ReservationsContentProvider"

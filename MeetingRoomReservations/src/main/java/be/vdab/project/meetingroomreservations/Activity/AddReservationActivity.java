@@ -320,7 +320,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
             Log.e("time:",time);
             Log.e("timezone", TimeZone.getDefault().toString());
 
-            return date+"T"+time+":00.000Z"; //todo: + timezone: TimeZone.getDefault()
+            return date+"T"+time+":00+0200"; //todo: + timezone: TimeZone.getDefault()
         }
 
         @Override

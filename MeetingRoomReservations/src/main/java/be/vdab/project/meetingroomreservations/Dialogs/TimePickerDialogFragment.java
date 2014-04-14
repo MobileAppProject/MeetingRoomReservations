@@ -43,8 +43,8 @@ public class TimePickerDialogFragment extends DialogFragment
             minute = c.get(Calendar.MINUTE);
         }
 
-        return new TimePickerDialog(getActivity(), this, hour, minute,
-                DateFormat.is24HourFormat(getActivity()));
+        return new CustomTimePickerDialog(getActivity(), this, hour, minute,
+                DateFormat.is24HourFormat(getActivity()), 15);
     }
 
     @Override
