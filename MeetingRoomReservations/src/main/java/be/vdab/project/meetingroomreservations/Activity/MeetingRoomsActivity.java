@@ -3,7 +3,10 @@ package be.vdab.project.meetingroomreservations.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.MeetingRoomFragment;
@@ -24,21 +27,18 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 			((ReservationFragment) getFragmentManager().findFragmentById(
 					R.id.appointment_list)).setActivateOnItemClick(true);
 		}*/
+
 	}
 
-	/*@Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.reservations, menu); à
+		getMenuInflater().inflate(R.menu.settings, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_add:
-			Intent intent = new Intent(getApplicationContext(), AddAppointmentActivity.class);
-			startActivity(intent);
-			return true;
 		case R.id.action_settings:
 			Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
 			startActivity(settingsIntent);
@@ -46,10 +46,11 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}*/
+	}
 
 	@Override
 	public void onMeetingRoomSelected(Long id, String meetingRoomName) {
+        Log.e("TESTING PREFERENCES", "pref: " + PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode", ""));
 		/*if(dualPaneMode) {
 			Bundle arguments = new Bundle();
 			arguments.putLong(Constants.APPOINTMENT_ID, id);

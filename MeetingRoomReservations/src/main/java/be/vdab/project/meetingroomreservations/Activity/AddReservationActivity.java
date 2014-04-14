@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,9 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
     String savedReservationId;
 
+    String mode;
+    String defaultvalue;
+
     //variables for datepicker
     int year;
     int month;
@@ -73,9 +77,13 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
 
+//
+//        mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(String.valueOf(R.string.pref_key_mode_list), "");
+//        defaultvalue = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getApplicationContext().getString(R.string.pref_key_mode_input), "");
 
-
-
+        mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode", ""); //fixme: don't use literla strings
+        defaultvalue = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode_input", "");
+        Log.e(" preference values: ", "mode: " + mode + ", value: " + defaultvalue);
 
 
 
@@ -102,6 +110,10 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         saveButton = (Button) findViewById(R.id.add_reservation_save);
 
 
+        if(mode.equals(Constants.USERMODE))
+        {
+            nameView.setText(defaultvalue);
+        }
         if(b!=null)
         {
             savedMeetingRoomId = "" + b.get(Constants.MEETINGROOM_ID);
@@ -115,7 +127,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 savedReservationId = ""+b.get("reservationId");
                 String beginDate = "" + b.get("beginDate");
                 String endDate = "" + b.get("endDate");
-                SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd"); // todo: use datehelper
                 SimpleDateFormat dfHourAndMinute = new SimpleDateFormat("HH:mm");
                 Date begin = new Date(Long.parseLong(beginDate));
                 GregorianCalendar beginCalendar = new GregorianCalendar();
@@ -313,7 +325,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
         @Override
         protected void onPostExecute(String value) {
-            Intent intent = new Intent(getApplicationContext(), LoadingActivity.class); // todo
+            Intent intent = new Intent(getApplicationContext(), LoadingActivity.class); // todo: currently goes to loadingactivity -> meetingrooms. Better to go to the reservations directly and update with DataRefreshService
             startActivity(intent);
             finish();
         }
@@ -371,7 +383,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
         @Override
         protected void onPostExecute(String value) {
-            Intent intent = new Intent(getApplicationContext(), LoadingActivity.class); // todo
+            Intent intent = new Intent(getApplicationContext(), LoadingActivity.class); // todo: currently goes to loadingactivity -> meetingrooms. Better to go to the reservations directly and update with DataRefreshService
             startActivity(intent);
             finish();
         }

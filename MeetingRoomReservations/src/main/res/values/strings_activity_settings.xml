@@ -1,0 +1,25 @@
+<resources>
+        <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_key_mode_list">mode</string>
+    <string name="pref_title_mode">mode</string>
+    <string name="pref_summary_mode">U bent nu in </string> <!-- user mode or meetingroom mode -->
+
+    <string name="pref_key_mode_input">mode_input</string>
+    <string name="pref_title_mode_input">Gebruikersnaam</string> <!-- default username or meeting room-->
+    <string name="pref_summary_mode_input">De huidige naam is </string>
+
+
+    <string-array name="pref_mode_entries">
+        <item>Gebruikersmode</item>
+        <item>Vergaderzaalmode</item>
+    </string-array>
+    <string-array name="pref_mode_values">
+        <item>user_mode</item>
+        <item>meetingroom_mode</item>
+    </string-array>
+
+
+</resources>
