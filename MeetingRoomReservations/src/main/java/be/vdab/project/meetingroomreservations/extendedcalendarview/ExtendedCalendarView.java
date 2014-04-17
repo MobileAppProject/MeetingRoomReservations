@@ -1,4 +1,4 @@
-package com.tyczj.extendedcalendarview;
+package be.vdab.project.meetingroomreservations.extendedcalendarview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -21,8 +22,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.tyczj.extendedcalendarview.R;
+
 import java.util.Calendar;
 import java.util.Locale;
+
+import be.vdab.project.meetingroomreservations.Activity.ExtendedCalendarActivity;
 
 public class ExtendedCalendarView extends RelativeLayout implements OnItemClickListener,OnCreateContextMenuListener,
 	OnClickListener{
@@ -48,9 +53,9 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 	public interface OnDayClickListener{
 		public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day);
 	}
-	
+
 	public interface OnDayContextMenuListener{
-		public void onDayContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo);
+		public void onDayContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo);
 	}
 
 	public ExtendedCalendarView(Context context) {
@@ -58,27 +63,28 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 		this.context = context;
 		init();
 	}
-	
+
 	public ExtendedCalendarView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.context = context;
 		init();
 	}
-	
+
 	public ExtendedCalendarView(Context context, AttributeSet attrs,int defStyle) {
 		super(context, attrs, defStyle);
 		this.context = context;
 		init();
 	}
-	
+
 	private void init(){
-		/*cal = Calendar.getInstance();
+
+		cal = Calendar.getInstance();
 		base = new RelativeLayout(context);
 		base.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
 		base.setMinimumHeight(50);
-		
+
 		base.setId(4);
-		
+
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		params.leftMargin = 16;
 		params.topMargin = 50;
@@ -90,7 +96,7 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 		prev.setImageResource(R.drawable.navigation_previous_item);
 		prev.setOnClickListener(this);
 		base.addView(prev);
-		
+
 		params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		params.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		params.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -100,9 +106,9 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 		month.setTextAppearance(context, android.R.attr.textAppearanceLarge);
 		month.setText(cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())+" "+cal.get(Calendar.YEAR));
 		month.setTextSize(25);
-		
+
 		base.addView(month);
-		
+
 		params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		params.rightMargin = 16;
 		params.topMargin = 50;
@@ -113,17 +119,17 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 		next.setLayoutParams(params);
 		next.setId(3);
 		next.setOnClickListener(this);
-		
+
 		base.addView(next);
-		
+
 		addView(base);
-		
+
 		params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		params.bottomMargin = 20;
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		params.addRule(RelativeLayout.BELOW, base.getId());
-		
+
 		calendar = new GridView(context);
 		calendar.setLayoutParams(params);
 		calendar.setVerticalSpacing(4);
@@ -131,24 +137,34 @@ public class ExtendedCalendarView extends RelativeLayout implements OnItemClickL
 		calendar.setNumColumns(7);
 		calendar.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
 		calendar.setDrawSelectorOnTop(true);
-		
+
 		mAdapter = new CalendarAdapter(context,cal);
 		calendar.setAdapter(mAdapter);
 		calendar.setOnTouchListener(new OnTouchListener() {
-			
+
 	        @Override
 	        public boolean onTouch(View v, MotionEvent event) {
 	            return calendarGesture.onTouchEvent(event);
 	        }
 	    });
-		
-		addView(calendar);*/
+
+        Log.e("INIT OF EXTENDEDCALENDARVIEW", "TESTTESTTESTTESTTESTTETSTESTTESTTETSTTETSTTESTTETST");
+
+        final ExtendedCalendarActivity activity = ((ExtendedCalendarActivity) this.getContext());
+        setOnDayClickListener( new OnDayClickListener() {
+            @Override
+            public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
+                activity.onDayClicked(adapter, view, position, id, day);
+            }
+        });
+
+		addView(calendar);
 	}
 
 	private class GestureListener extends SimpleOnGestureListener {
 	    @Override
 	    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,float velocityY) {
-	    	
+
 	    	if(gestureType == LEFT_RIGHT_GESTURE){
 	    		if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
 		            nextMonth();

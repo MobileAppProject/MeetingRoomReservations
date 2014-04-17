@@ -1,6 +1,7 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,25 +13,33 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.tyczj.extendedcalendarview.CalendarProvider;
-import com.tyczj.extendedcalendarview.Event;
+import android.view.View;
+import android.widget.AdapterView;
 
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
 import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
+import be.vdab.project.meetingroomreservations.extendedcalendarview.CalendarProvider;
+import be.vdab.project.meetingroomreservations.extendedcalendarview.Day;
+import be.vdab.project.meetingroomreservations.extendedcalendarview.Event;
+import be.vdab.project.meetingroomreservations.extendedcalendarview.ExtendedCalendarView;
 
 import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_RESERVATION;
 
-public class ExtendedCalendarActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+//Calendar stuff
+
+public class ExtendedCalendarActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExtendedCalendarView.OnDayClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
 
         String[] projection = { DB.RESERVATIONS.personName, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.ID };
@@ -119,5 +128,22 @@ public class ExtendedCalendarActivity extends FragmentActivity implements Loader
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
+        Log.e("OnDayClickListener", "PLease make htis work");
+        Calendar cal = Calendar.getInstance();
+        cal.set(day.getYear(), day.getMonth(), day.getDay());
+
+        Intent intentReservationsForDay = new Intent(getApplicationContext(), ReservationsForDayActivity.class);
+        String tempMeetingRoomId = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+        String tempMeetingRoomName =""+ getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
+        Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempMeetingRoomId);
+        intentReservationsForDay.putExtra(Constants.MEETINGROOM_ID, tempMeetingRoomId);
+        intentReservationsForDay.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName);
+        intentReservationsForDay.putExtra("date_to_show", cal);
+
+        startActivity(intentReservationsForDay);
     }
 }

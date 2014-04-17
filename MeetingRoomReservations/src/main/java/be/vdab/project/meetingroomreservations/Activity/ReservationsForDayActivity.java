@@ -22,6 +22,7 @@ import be.vdab.project.meetingroomreservations.R;
 public class ReservationsForDayActivity extends FragmentActivity implements ReservationsForDayFragment.Callbacks{
 
     private static final String TAG = "ReservationsForDayActivity";
+    private Calendar cal;
 
     private int currentId;
     ViewPager viewPager;
@@ -35,6 +36,8 @@ public class ReservationsForDayActivity extends FragmentActivity implements Rese
 
         viewPager = (ViewPager) findViewById(R.id.reservation_for_day_viewpager);
         viewPager.setAdapter(new ReservationsForDayPagerAdapter(getSupportFragmentManager()));
+
+        cal = (Calendar) getIntent().getExtras().get("date_to_show");
 
         Log.e(TAG, "oncreate - viewpager: " + viewPager);
     }
@@ -119,10 +122,21 @@ public class ReservationsForDayActivity extends FragmentActivity implements Rese
         public Fragment getItem(int i) {
             Bundle arguments = new Bundle();
             Log.e("getItem: ", "" + i);
-            arguments.putLong(Constants.DATE, getDateWeekday(i+2));
-            arguments.putBoolean(Constants.WEEKVIEW, true);
+
+
+            if(getIntent().hasExtra("date_to_show")){
+                arguments.putLong(Constants.DATE, ((Calendar)getIntent().getExtras().get("date_to_show")).getTimeInMillis());
+                arguments.putBoolean(Constants.WEEKVIEW, true);
+            }else{
+                arguments.putLong(Constants.DATE, getDateWeekday(i+2));
+                arguments.putBoolean(Constants.WEEKVIEW, true);
+            }
+
             ReservationsForDayFragment fragment = new ReservationsForDayFragment();
             fragment.setArguments(arguments);
+
+
+
             Log.e("TESTING GETDATEWEEKDAY: ", "day 1: " + getDateWeekday(2) + "as Date: " + (new Date(getDateWeekday(2))));
             Log.e("TESTING GETDATEWEEKDAY: ", "day 2: " + getDateWeekday(3) + "as Date: " + (new Date(getDateWeekday(3))));
             Log.e("TESTING GETDATEWEEKDAY: ", "day 3: " + getDateWeekday(4) + "as Date: " + (new Date(getDateWeekday(4))));

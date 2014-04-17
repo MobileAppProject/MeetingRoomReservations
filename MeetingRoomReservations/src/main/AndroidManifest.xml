@@ -58,8 +58,8 @@
         </provider>
 
         <provider
-            android:name="com.tyczj.extendedcalendarview.CalendarProvider"
-            android:authorities="com.tyczj.extendedcalendarview.calendarprovider">
+            android:name=".extendedcalendarview.CalendarProvider"
+            android:authorities="be.vdab.project.meetingroomreservations.CalendarProvider">
         </provider>
 
         <receiver android:name="be.vdab.project.meetingroomreservations.Service.RefreshReceiver" >

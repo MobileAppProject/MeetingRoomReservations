@@ -17,18 +17,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import be.vdab.project.meetingroomreservations.Activity.AddReservationActivity;
 import be.vdab.project.meetingroomreservations.Activity.LoadingActivity;
+import be.vdab.project.meetingroomreservations.Activity.ReservationsForDayActivity;
 import be.vdab.project.meetingroomreservations.Adapter.CustomCursorReservationsForDayAdapter;
 import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Dialogs.DeleteOrEditConfirmationDialogFragment;
+import be.vdab.project.meetingroomreservations.Helper.DateHelper;
 import be.vdab.project.meetingroomreservations.Model.Reservation;
 import be.vdab.project.meetingroomreservations.R;
 import be.vdab.project.meetingroomreservations.db.DB;
@@ -49,9 +55,11 @@ public class ReservationsForDayFragment extends ListFragment implements
 	
 	private View view;
 
+    TextView tvDay;
+    Button btnPrevious, btnNext;
+
     private String reservationIdString;
     private Reservation res;
-    private Time theDay;
 
     private Boolean isInWeekView;
     private long givenDate;
@@ -70,46 +78,40 @@ public class ReservationsForDayFragment extends ListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        view = inflater.inflate(R.layout.fragment_reservations, container, false);
+        view = inflater.inflate(R.layout.fragment_reservations_for_day, container, false);
         Log.e("In oncreateView: ", "");
 
-       getActivity().getLoaderManager().initLoader(LOADER_RESERVATIONSFORDAY, null, this);
+        tvDay = (TextView) view.findViewById(R.id.tvDay);
+        tvDay.setText(DateHelper.formatDayFromMilis(givenDate));
 
-        //query arguments
+        SimpleDateFormat df = new SimpleDateFormat("E");
+        btnPrevious = (Button) view.findViewById(R.id.btnPrev);
+        Date previousDay = new Date(givenDate - _24_HOURS_IN_MILIS);
+        btnPrevious.setText(df.format(previousDay));
+        btnPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(givenDate - _24_HOURS_IN_MILIS);
 
-
-
-      /*  Uri reservationURI = CONTENT_URI_RESERVATION;
-        String[] projection = {  DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName , DB.RESERVATIONS.description};
-        String selection = null;
-        String[] selectionArgs  = null;
-
-        Cursor cursor =  getActivity().getContentResolver().query(reservationURI,projection, selection , selectionArgs, "reservations.beginDate ASC" );
-        cursor.moveToFirst();*/
-/*
-        MatrixCursor matrixCursor = new MatrixCursor(new String[] {  DB.RESERVATIONS.personName, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.description, DB.RESERVATIONS.ID});
-        Log.e("matrixCursor", matrixCursor.toString());
-
-
-        long begin = 0;
-        long end = getTodayZeroHours().toMillis(false);
-        int id = 10000000;
-        while (cursor.moveToNext()) {
-            begin =Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)));
-            if((begin-end) >= 15*60*1000){
-
-
-                matrixCursor.addRow(new Object[] { " ",end, begin, "hier een reservatie aanmaken" , id++ });
-                matrixCursor.addRow(new Object[] {cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)), cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)), cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)),cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.description)), cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.ID))});
-
+                goToDay(cal);
             }
-            end= Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)));
+        });
 
-        }
-        Time tomorrow = getTodayZeroHours();
-        tomorrow.set(tomorrow.toMillis(false) +(24 * 60 * 60 * 1000)-1);
-        matrixCursor.addRow(new Object[] { " ",end, tomorrow.toMillis(false), "hier een reservatie aanmaken" , id++ });*/
+        btnNext = (Button) view.findViewById(R.id.btnNext);
+        Date nextDay = new Date(givenDate + _24_HOURS_IN_MILIS);
+        btnNext.setText(df.format(nextDay));
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(givenDate + _24_HOURS_IN_MILIS);
 
+                goToDay(cal);
+            }
+        });
+
+       getActivity().getLoaderManager().initLoader(LOADER_RESERVATIONSFORDAY, null, this);
 
        adapter = new CustomCursorReservationsForDayAdapter(getActivity(), null, 0); //todo: use the correct rows put into a MatrixCursor and show this with the adapter
         Log.e("IN ONCREATEVIEW", "ADAPTER SHOULD NOT BE NULL HERE: " + adapter);
@@ -124,6 +126,18 @@ public class ReservationsForDayFragment extends ListFragment implements
 		
 		return view;
 	}
+
+    private void goToDay(Calendar cal) {
+        Intent intentReservationsForDay = new Intent(getActivity(), ReservationsForDayActivity.class);
+        String tempMeetingRoomId = ""+getActivity().getIntent().getExtras().get(Constants.MEETINGROOM_ID);
+        String tempMeetingRoomName =""+ getActivity().getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
+        intentReservationsForDay.putExtra(Constants.MEETINGROOM_ID, tempMeetingRoomId);
+        intentReservationsForDay.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName);
+        intentReservationsForDay.putExtra("date_to_show", cal);
+        intentReservationsForDay.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(intentReservationsForDay);
+    }
 
     private Time getTodayZeroHours() {
         Time today = new Time();
