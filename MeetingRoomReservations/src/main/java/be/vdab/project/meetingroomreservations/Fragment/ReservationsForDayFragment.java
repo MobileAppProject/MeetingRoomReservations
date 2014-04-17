@@ -1,7 +1,6 @@
 package be.vdab.project.meetingroomreservations.Fragment;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +21,8 @@ import android.widget.ListView;
 
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Date;
 
 import be.vdab.project.meetingroomreservations.Activity.AddReservationActivity;
 import be.vdab.project.meetingroomreservations.Activity.LoadingActivity;
@@ -37,7 +39,9 @@ import static be.vdab.project.meetingroomreservations.db.ReservationsContentProv
 public class ReservationsForDayFragment extends ListFragment implements
 		LoaderCallbacks<Cursor>, DeleteOrEditConfirmationDialogFragment.Callback {
 
-	private static final int LOADER_RESERVATIONS = 1;
+    private static final String TAG = "ReservationsForDayFragment";
+	private static final int LOADER_RESERVATIONSFORDAY = 6871897;
+    private static final long _24_HOURS_IN_MILIS = 24 * 60 * 60 * 1000;
 	
 	private Callbacks listener = dummyListener;
 	
@@ -48,13 +52,27 @@ public class ReservationsForDayFragment extends ListFragment implements
     private String reservationIdString;
     private Reservation res;
 
+    private Boolean isInWeekView;
+    private long givenDate;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        isInWeekView = getArguments().getBoolean(Constants.WEEKVIEW);
+        givenDate = getArguments().getLong(Constants.DATE);
+
+        Log.e(TAG, "onCreate: arguments: isInWeekView:" + isInWeekView + ", date: " + new Date(givenDate));
+    }
+
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         view = inflater.inflate(R.layout.fragment_reservations, container, false);
+        Log.e("In oncreateView: ", "");
 
-        getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
+       getActivity().getLoaderManager().initLoader(LOADER_RESERVATIONSFORDAY, null, this);
 
         //query arguments
 
@@ -93,6 +111,8 @@ public class ReservationsForDayFragment extends ListFragment implements
 
 
        adapter = new CustomCursorReservationsForDayAdapter(getActivity(), null, 0); //todo: use the correct rows put into a MatrixCursor and show this with the adapter
+        Log.e("IN ONCREATEVIEW", "ADAPTER SHOULD NOT BE NULL HERE: " + adapter);
+
 
 
 
@@ -111,6 +131,13 @@ public class ReservationsForDayFragment extends ListFragment implements
         today.minute = 0;
         today.second = 0;
         return today;
+    }
+
+    private Time getTimeZeroHours(Time time) {
+        time.hour = 0;
+        time.minute = 0;
+        time.second = 0;
+        return time;
     }
 
     @Override
@@ -174,6 +201,7 @@ public class ReservationsForDayFragment extends ListFragment implements
 
 
 
+                adapter.notifyDataSetChanged();
 
 
 
@@ -184,7 +212,7 @@ public class ReservationsForDayFragment extends ListFragment implements
 
     private void delete(String meetingRoomIdString) {
         DeleteOrEditConfirmationDialogFragment fragment = DeleteOrEditConfirmationDialogFragment.newInstance(this);
-        fragment.show(getFragmentManager(), "deleteconfirmation");
+        fragment.show(getActivity().getFragmentManager(), "deleteconfirmation");
 
 
     }
@@ -211,17 +239,32 @@ public class ReservationsForDayFragment extends ListFragment implements
         String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName, DB.RESERVATIONS.description};
 
 		String selection = DB.RESERVATIONS.beginDate + "  > ? and " + DB.RESERVATIONS.beginDate + " < ?";
-        Time now = getTodayZeroHours();
-        Time tomorrow = getTodayZeroHours();
-        tomorrow.set(tomorrow.toMillis(false)+(24 * 60 * 60 * 1000));
 
-        Log.e("start of today in millis: ", ""+now.toMillis(false));
-        Log.e("start of tomorrow in millis: ", "" + tomorrow.toMillis(false));
+        Time now, tomorrow;
+        if(isInWeekView){
+            Log.e("In WeekView: ", "");
+            now = new Time();
+            now.set(givenDate);
+            now = getTimeZeroHours(now);
+            tomorrow = new Time(now);
+            tomorrow.set((tomorrow.toMillis(false) + _24_HOURS_IN_MILIS));
+        }else{
+            now = getTodayZeroHours();
+            now.set(now.toMillis(false));
+            tomorrow = getTodayZeroHours();
+            tomorrow.set(tomorrow.toMillis(false)+(_24_HOURS_IN_MILIS));
+        }
+
+
+        Log.e("start of today in millis: ", "" + new Date(now.toMillis(false)));
+        Log.e("start of tomorrow in millis: ", "" + new Date(tomorrow.toMillis(false)));
         String[] selectionArgs = {""+now.toMillis(false), ""+tomorrow.toMillis(false)} ;
 
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
 				ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
 				selectionArgs, DB.RESERVATIONS.beginDate + " ASC");
+
+
 		return cursorLoader;
 	}
 
@@ -232,12 +275,31 @@ public class ReservationsForDayFragment extends ListFragment implements
         Log.e("matrixCursor", matrixCursor.toString());
 
 
+
+
         long begin = 0;
-        long end = getTodayZeroHours().toMillis(false);
+        long end;
+        Time tomorrow;
+
+        if(isInWeekView){
+            Time date = new Time();
+            date.set(givenDate);
+            end = getTimeZeroHours(date).toMillis(false); // start of the day
+            tomorrow = new Time(date);
+            tomorrow.set(tomorrow.toMillis(false) + _24_HOURS_IN_MILIS - 1); // 1 millisecond before the start of next day
+
+
+        }else{
+            end = getTodayZeroHours().toMillis(false);
+            tomorrow = getTodayZeroHours();
+            tomorrow.set(tomorrow.toMillis(false) +_24_HOURS_IN_MILIS - 1);
+        }
+
+
         int id = 10000000;
         while (cursor.moveToNext()) {
             begin =Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)));
-            if((begin-end) >= 15*60*1000){
+            if((begin-end) >= 15*60*1000){ // 15 minutes in millis
 
 
                 matrixCursor.addRow(new Object[] { " ",end, begin, "hier een reservatie aanmaken" , id++ });
@@ -248,21 +310,21 @@ public class ReservationsForDayFragment extends ListFragment implements
             end= Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)));
 
         }
-        Time tomorrow = getTodayZeroHours();
-        tomorrow.set(tomorrow.toMillis(false) +(24 * 60 * 60 * 1000)-1);
+
         matrixCursor.addRow(new Object[] { " ",end, tomorrow.toMillis(false), "hier een reservatie aanmaken" , id++ });
 
-        Log.e("fhdsuifhfgs", "dkjfhdjkshfdfhsu");
 
-      //  adapter = new CustomCursorReservationsForDayAdapter(getActivity(), matrixCursor, 0); //todo: use the correct rows put into a MatrixCursor and show this with the adapter
+       Log.e("I THINK ADAPTER IS NULL: ", "" + adapter);
+//        if(adapter!=null){
+        adapter.swapCursor(matrixCursor); //fixme: error
+//        }
 
-
-        adapter.swapCursor(matrixCursor);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		adapter = null;
+
+        adapter = null;
 	}
 	
 	@Override

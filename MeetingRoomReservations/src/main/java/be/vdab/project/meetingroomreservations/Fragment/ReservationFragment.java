@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,10 +184,13 @@ public class ReservationFragment extends ListFragment implements
         //FIXME: need all those fields?
         String[] projection = { DB.RESERVATIONS.ID, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName, DB.RESERVATIONS.description};
 
-		String selection = null;
+		String selection = DB.RESERVATIONS.endDate + " > ?";
+        Time now = new Time();
+        now.setToNow();
+        String[] selectionArgs = {String.valueOf(now.toMillis(false))};
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
 				ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
-				null, DB.RESERVATIONS.beginDate + " ASC");
+				selectionArgs, DB.RESERVATIONS.beginDate + " ASC");
 		return cursorLoader;
 	}
 

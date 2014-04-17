@@ -1,22 +1,42 @@
 package be.vdab.project.meetingroomreservations.Activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import be.vdab.project.meetingroomreservations.Constants;
 import be.vdab.project.meetingroomreservations.Fragment.ReservationsForDayFragment;
 import be.vdab.project.meetingroomreservations.R;
 
-public class ReservationsForDayActivity extends Activity implements ReservationsForDayFragment.Callbacks{
+public class ReservationsForDayActivity extends FragmentActivity implements ReservationsForDayFragment.Callbacks{
+
+    private static final String TAG = "ReservationsForDayActivity";
+
+    private int currentId;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservations_for_day);
+
+        // todo: currentId = getIntent().getIntExtra(, 0);
+
+        viewPager = (ViewPager) findViewById(R.id.reservation_for_day_viewpager);
+        viewPager.setAdapter(new ReservationsForDayPagerAdapter(getSupportFragmentManager()));
+
+        Log.e(TAG, "oncreate - viewpager: " + viewPager);
     }
 
 
@@ -84,6 +104,44 @@ public class ReservationsForDayActivity extends Activity implements Reservations
         }
 
 
+    }
+
+    private class ReservationsForDayPagerAdapter extends FragmentStatePagerAdapter {
+
+
+        public ReservationsForDayPagerAdapter(FragmentManager fm ) {
+            super(fm);
+
+        }
+
+
+        @Override
+        public Fragment getItem(int i) {
+            Bundle arguments = new Bundle();
+            Log.e("getItem: ", "" + i);
+            arguments.putLong(Constants.DATE, getDateWeekday(i+2));
+            arguments.putBoolean(Constants.WEEKVIEW, true);
+            ReservationsForDayFragment fragment = new ReservationsForDayFragment();
+            fragment.setArguments(arguments);
+            Log.e("TESTING GETDATEWEEKDAY: ", "day 1: " + getDateWeekday(2) + "as Date: " + (new Date(getDateWeekday(2))));
+            Log.e("TESTING GETDATEWEEKDAY: ", "day 2: " + getDateWeekday(3) + "as Date: " + (new Date(getDateWeekday(3))));
+            Log.e("TESTING GETDATEWEEKDAY: ", "day 3: " + getDateWeekday(4) + "as Date: " + (new Date(getDateWeekday(4))));
+            Log.e("TESTING GETDATEWEEKDAY: ", "day 4: " + getDateWeekday(5) + "as Date: " + (new Date(getDateWeekday(5))));
+            Log.e("TESTING GETDATEWEEKDAY: ", "day 5: " + getDateWeekday(6) + "as Date: " + (new Date(getDateWeekday(6))));
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return 1; //there are 5 weekdays. I doubt this will change any time soon.
+        }
+
+        private Long getDateWeekday(int dayOfWeek){
+            Calendar calendar = new GregorianCalendar();
+            calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+
+            return calendar.getTimeInMillis();
+        }
     }
 
 }

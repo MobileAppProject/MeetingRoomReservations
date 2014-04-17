@@ -23,7 +23,6 @@ import be.vdab.project.meetingroomreservations.db.ReservationsContentProvider;
 public class ReservationDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    //todo: everything
     private static final int LOADER_APPOINTMENT = 2;
 
     private View view;
@@ -51,6 +50,7 @@ public class ReservationDetailFragment extends Fragment implements
         getLoaderManager().initLoader(LOADER_APPOINTMENT, null, this);
         return view;
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

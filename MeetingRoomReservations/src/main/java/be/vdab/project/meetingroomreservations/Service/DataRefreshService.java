@@ -44,7 +44,7 @@ public class DataRefreshService extends IntentService {
             Log.e(TAG, "started downloading data");
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-            Reservation[] reservations = restTemplate.getForObject(Constants.DATA_BASEURL + "reservations/CurrentReservationsForMeetingRoomID" + url, Reservation[].class);
+            Reservation[] reservations = restTemplate.getForObject(Constants.DATA_BASEURL + "reservations/AllReservationsForMeetingRoomID" + url, Reservation[].class); // url was: "reservations/CurrentReservationsForMeetingRoomID" + url
             getContentResolver().delete(ReservationsContentProvider.CONTENT_URI_RESERVATION, null, null);
 
             if(reservations != null) {
