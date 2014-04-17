@@ -4,19 +4,19 @@
 
     <item
         android:id="@+id/action_add_reservation"
-        android:title="Add reservation"
+        android:title="@string/add_reservation"
         android:icon="@drawable/icon_add"
         android:showAsAction="ifRoom"></item>
 
     <item
         android:id="@+id/action_show_reservations_for_day"
-        android:title="reservation day overview"
-        android:icon="@drawable/ic_launcher"
+        android:title="@string/day_overview"
+        android:icon="@drawable/icon_day"
         android:showAsAction="ifRoom"></item>
 
     <item
         android:id="@+id/action_show_reservations_for_month"
-        android:title="reservation month overview"
-        android:icon="@drawable/ic_launcher"
+        android:title="@string/month_overview"
+        android:icon="@drawable/icon_month"
         android:showAsAction="ifRoom"></item>
 </menu>

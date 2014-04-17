@@ -36,5 +36,8 @@
     <string name="title_activity_week_view">WeekViewActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_extended_calendar">ExtendedCalendarActivity</string>
+    <string name="add_reservation">Nieuwe reservatie</string>
+    <string name="day_overview">Dag overzicht</string>
+    <string name="month_overview">Maand overzicht</string>
 
 </resources>

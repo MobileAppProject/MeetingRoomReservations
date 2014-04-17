@@ -213,12 +213,7 @@ public class ReservationsForDayFragment extends ListFragment implements
                 res.setPersonName(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)));
                 res.setDescription(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.description)));
 
-
-
-
                 adapter.notifyDataSetChanged();
-
-
 
                 return true;
             }
