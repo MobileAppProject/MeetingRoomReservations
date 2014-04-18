@@ -300,42 +300,9 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-
-//                Uri meetingRoomURI = CONTENT_URI_MEETINGROOM;
-//                String[] projection = { DB.MEETINGROOMS.meetingRoomId,DB.MEETINGROOMS.name };
-//                String selection = DB.MEETINGROOMS.meetingRoomId + "  = ?";
-//                Log.e("testestestestestest", "testest");
-//                String[] selectionArgs  = { (savedMeetingRoomId)};
-//
-//                Cursor cursor =  getContentResolver().query(meetingRoomURI, projection, selection, selectionArgs, null);
-//                if(getContentResolver() == null){
-//                    Log.e("waaah","contentresolver is null");
-//                }
-//                cursor.moveToFirst();
-//                int indexName = cursor.getColumnIndex(DB.MEETINGROOMS.name);
-//                int indexID = cursor.getColumnIndex(DB.MEETINGROOMS.meetingRoomId);
-//                Log.e("cursor indexname and indexID. Should be 0 and 1", "indexName: " + indexName + ", indexID: " + indexID);
-//
-//
-//                String name;
-//                String id;
-//                //TODO: stop using dummy data and fix this issue
-//                if(cursor.moveToFirst()){ // moveToFirst returns false if the cursor is empty
-//                    name = cursor.getString(indexName);
-//                    id = cursor.getString(indexID);
-//                    cursor.close();
-//                }
-//                else{
-//                    Log.e("Personalized error: ", "Problem with cursor, will not retrieve the required data but filled variables with dummy data! Problem occured in the AddReservationActivity class.");
-//                    name="RudyRoom";
-//                    id="1";
-//                }
-
                 MeetingRoom meetingRoom = new MeetingRoom();
                 meetingRoom.setMeetingRoomId(savedMeetingRoomId);
                 meetingRoom.setName(savedMeetingRoomName);
-
-
 
                 ReservationDTO rezzy = new ReservationDTO();
                 rezzy.setMeetingRoom(meetingRoom);

@@ -5,16 +5,16 @@
 
     <string name="pref_key_mode_list">mode</string>
     <string name="pref_title_mode">mode</string>
-    <string name="pref_summary_mode">U bent nu in </string> <!-- user mode or meetingroom mode -->
+    <string name="pref_summary_mode">You are now in </string> <!-- user mode or meetingroom mode -->
 
     <string name="pref_key_mode_input">mode_input</string>
-    <string name="pref_title_mode_input">Gebruikersnaam</string> <!-- default username or meeting room-->
-    <string name="pref_summary_mode_input">De huidige naam is </string>
+    <string name="pref_title_mode_input">Username</string> <!-- default username or meeting room-->
+    <string name="pref_summary_mode_input">The current name is </string>
 
 
     <string-array name="pref_mode_entries">
-        <item>Gebruikersmode</item>
-        <item>Vergaderzaalmode</item>
+        <item>Usermode</item>
+        <item>Meetingroommode</item>
     </string-array>
     <string-array name="pref_mode_values">
         <item>user_mode</item>

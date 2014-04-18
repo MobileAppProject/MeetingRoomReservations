@@ -313,7 +313,7 @@ public class ReservationsForDayFragment extends ListFragment implements
             if((begin-end) >= 15*60*1000){ // 15 minutes in millis
 
 
-                matrixCursor.addRow(new Object[] { " ",end, begin, "hier een reservatie aanmaken" , id++ });
+                matrixCursor.addRow(new Object[] { " ",end, begin,getResources().getString(R.string.make_reservation_here) , id++ });
 
             }
             matrixCursor.addRow(new Object[] {cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)), cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)), cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)),cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.description)), cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.ID))});
@@ -322,7 +322,7 @@ public class ReservationsForDayFragment extends ListFragment implements
 
         }
 
-        matrixCursor.addRow(new Object[] { " ",end, tomorrow.toMillis(false), "hier een reservatie aanmaken" , id++ });
+        matrixCursor.addRow(new Object[] { " ",end, tomorrow.toMillis(false), getResources().getString(R.string.make_reservation_here) , id++ });
 
         Log.e("fhdsuifhfgs", "dkjfhdjkshfdfhsu");
 

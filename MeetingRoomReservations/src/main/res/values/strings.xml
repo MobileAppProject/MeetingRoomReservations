@@ -4,40 +4,39 @@
     <string name="app_name">MeetingRoomReservations</string>
     <string name="title_activity_main">Meetingroom Reservations</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">testing fragment</string>
-    <string name="no_reservations">Geen reservaties</string>
-    <string name="loading">Laden....</string>
-    <string name="ReservationTitle">Reservatie</string>
-    <string name="no_meetingrooms">geen vergaderzalen</string>
-    <string name="MeetingRoomsTitle">Vergaderzalen</string>
+    <string name="no_reservations">No reservations</string>
+    <string name="loading">Loading....</string>
+    <string name="ReservationTitle">Reservation</string>
+    <string name="no_meetingrooms">No meetingrooms</string>
+    <string name="MeetingRoomsTitle">Meetingrooms</string>
 
     <!-- AddReservationActivity -->
-    <string name="add_reservation_name">Naam van persoon</string>
-    <string name="add_reservation_description">Omschrijving</string>
-    <string name="add_reservation_end_time">Eind uur</string>
-    <string name="add_reservation_begin_time">Begin uur</string>
-    <string name="add_reservation_date">Datum</string>
+    <string name="add_reservation_name">Person name</string>
+    <string name="add_reservation_description">Description</string>
+    <string name="add_reservation_end_time">End time</string>
+    <string name="add_reservation_begin_time">Begin time</string>
+    <string name="add_reservation_date">Date</string>
     <string name="add_reservation_save">Save reservation</string>
-    <string name="AddReservationTitle">Nieuwe reservatie</string>
+    <string name="AddReservationTitle">Add reservation</string>
 
     <!-- ReservationDetailFragment -->
-    <string name="reservation_detail_name">Naam van persoon</string>
-    <string name="reservation_detail_description">Omschrijving</string>
-    <string name="reservation_detail_end_time">Eind uur</string>
-    <string name="reservation_detail_begin_time">Begin uur</string>
-    <string name="reservation_detail_date">Datum</string>
-    <string name="ReservationDetailTitle">Reservatie</string>
+    <string name="reservation_detail_name">Person name</string>
+    <string name="reservation_detail_description">Description</string>
+    <string name="reservation_detail_end_time">End time</string>
+    <string name="reservation_detail_begin_time">Begin time</string>
+    <string name="reservation_detail_date">Date</string>
+    <string name="ReservationDetailTitle">Reservation</string>
 
     <!-- DeleteOrEditConfirmationDialogFragment -->
     <string name="delete_or_edit_confirmation_dialog_message">Do you want to edit or delete?</string>
-    <string name="edit">edit</string>
-    <string name="cancel">cancel</string>
-    <string name="delete">delete</string>
+    <string name="edit">Edit</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
     <string name="title_activity_week_view">WeekViewActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_extended_calendar">ExtendedCalendarActivity</string>
-    <string name="add_reservation">Nieuwe reservatie</string>
-    <string name="day_overview">Dag overzicht</string>
-    <string name="month_overview">Maand overzicht</string>
+    <string name="add_reservation">Add reservatione</string>
+    <string name="day_overview">Day overview</string>
+    <string name="month_overview">Month overview</string>
+    <string name="make_reservation_here">Reserve meetingroom</string>
 
 </resources>
