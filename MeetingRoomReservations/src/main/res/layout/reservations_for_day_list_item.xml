@@ -49,9 +49,6 @@
             android:textSize="12sp"
             android:maxLength="120"/>
 
-
-
     </LinearLayout>
-    
 
 </LinearLayout>

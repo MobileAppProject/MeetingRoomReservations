@@ -30,16 +30,16 @@ public class DataRefreshService extends IntentService {
     @Override
 
     protected void onHandleIntent(Intent intent) {
-        Log.e(TAG, "started downloading data");
+        Log.i(TAG, "started downloading data");
         String id = intent.getExtras().getString("meetingRoomId");
-        Log.e(TAG, "selected id: " + id);
+        Log.i(TAG, "selected id: " + id);
         downloadReservations("/"+intent.getExtras().get("meetingRoomId"));
         downloadMeetingRooms();
-        Log.e(TAG, "finished downloading data");
+        Log.i(TAG, "finished downloading data");
     }
 
     public void downloadReservations(String url) {
-        //This gets all reservations, also inactive ones
+
         try {
             Log.e(TAG, "started downloading data");
             RestTemplate restTemplate = new RestTemplate();

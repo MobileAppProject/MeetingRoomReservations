@@ -16,9 +16,4 @@ public class Constants {
     public static final String WEEKVIEW = "weekView";
     public static final String DATE = "date";
 
-	public static final String PREFERENCES_KEY= "pref_showName";
-	public static final String PREFERENCES_VALUE_FIRST_NAME = "fn";
-	public static final String PREFERENCES_VALUE_LAST_NAME = "ln";
-
-
 }

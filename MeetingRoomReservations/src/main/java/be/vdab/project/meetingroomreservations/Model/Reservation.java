@@ -5,7 +5,7 @@ package be.vdab.project.meetingroomreservations.Model;
  */
 public class Reservation {
 
-    //private String id;
+
     private String reservationId;
     private String meetingRoomId;
     private String beginDate;
@@ -13,14 +13,6 @@ public class Reservation {
     private String personName;
     private String description;
     private String active;
-
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
 
     public String getReservationId() {
         return reservationId;

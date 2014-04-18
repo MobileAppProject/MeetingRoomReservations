@@ -31,7 +31,6 @@ public class CustomCursorReservationsForDayAdapter extends CursorAdapter {
         TextView dateEndView = (TextView) view.findViewById(R.id.reservationsForDayReservationEndTime);
         long beginDateLong = Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)));
         long endDateLong = Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.endDate)));
-        //String beginAndEndDate = DateHelper.formatDayFromMilis(beginDateLong) + "\n" + DateHelper.formatHoursMinutesFromMilis(beginDateLong) + "  -  " + DateHelper.formatHoursMinutesFromMilis(endDateLong);
         dateBeginView.setText(DateHelper.formatHoursMinutesFromMilis(beginDateLong));
         dateEndView.setText(DateHelper.formatHoursMinutesFromMilis(endDateLong));
 

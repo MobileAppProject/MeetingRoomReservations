@@ -135,6 +135,7 @@ public class ExtendedCalendarActivity extends FragmentActivity implements Loader
         intentReservationsForDay.putExtra(Constants.MEETINGROOM_ID, tempMeetingRoomId);
         intentReservationsForDay.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName);
         intentReservationsForDay.putExtra("date_to_show", cal);
+        intentReservationsForDay.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(intentReservationsForDay);
     }

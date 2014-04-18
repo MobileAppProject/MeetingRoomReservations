@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
@@ -26,7 +25,6 @@ public class DatePickerDialogFragment extends DialogFragment
         //empty constructor
     }
     public DatePickerDialogFragment(int year, int month, int day){
-        Log.e("year in DatePickerDialogFragment", "" + year);
         this.year = year;
         this.month = month;
         this.day = day;
