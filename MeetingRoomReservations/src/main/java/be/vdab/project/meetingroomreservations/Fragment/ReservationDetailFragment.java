@@ -48,6 +48,7 @@ public class ReservationDetailFragment extends Fragment implements
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_reservation_detail, container, false);
         getLoaderManager().initLoader(LOADER_APPOINTMENT, null, this);
+
         return view;
     }
 
@@ -68,8 +69,6 @@ public class ReservationDetailFragment extends Fragment implements
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             TextView dateView = (TextView) view.findViewById(R.id.reservation_detail_date);
-            //SimpleDateFormat dfDay = new SimpleDateFormat("E dd/MM/yyyy");
-            //Date date = new Date (Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
             dateView.setText(DateHelper.formatDayFromMilis(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate)))));
 
 
@@ -93,59 +92,6 @@ public class ReservationDetailFragment extends Fragment implements
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> cursorLoader) {
         adapter = null;
     }
-
-   /* @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.appointment_detail, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_delete:
-                DeleteConfirmationDialogFragment fragment = DeleteConfirmationDialogFragment.newInstance(this);
-                fragment.show(getFragmentManager(), "deleteconfirmation");
-                return false;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
-//
-//    @Override
-//    public void onConfirm() {
-//        new DeleteTask().execute();
-//    }
-//
-//    @Override
-//    public void onCancel() {
-//        //do nothing
-//    }
-//
-//    class DeleteTask extends AsyncTask<String, Integer, String> {
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            try {
-//                RestTemplate restTemplate = new RestTemplate();
-//                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-//
-//                restTemplate.delete("http://192.168.56.1:2403/afspraken/" + appointmentBackendId);
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String value) {
-//            Intent intent = new Intent(getActivity().getApplicationContext(), LoadingActivity.class);
-//            startActivity(intent);
-//            getActivity().finish();
-//        }
-//
-//    }
 
 
 }

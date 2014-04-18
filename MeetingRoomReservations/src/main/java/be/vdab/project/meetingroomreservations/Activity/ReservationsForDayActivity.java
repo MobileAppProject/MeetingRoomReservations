@@ -24,15 +24,12 @@ public class ReservationsForDayActivity extends FragmentActivity implements Rese
     private static final String TAG = "ReservationsForDayActivity";
     private Calendar cal;
 
-    private int currentId;
     ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservations_for_day);
-
-        // todo: currentId = getIntent().getIntExtra(, 0);
 
         viewPager = (ViewPager) findViewById(R.id.reservation_for_day_viewpager);
         viewPager.setAdapter(new ReservationsForDayPagerAdapter(getSupportFragmentManager()));
@@ -92,15 +89,7 @@ public class ReservationsForDayActivity extends FragmentActivity implements Rese
 
     @Override
     public void onReservationSelected(Long id) {
-//		if(dualPaneMode) {
-//			Bundle arguments = new Bundle();
-//			arguments.putLong(Constants.APPOINTMENT_ID, id);
-//			AppointmentDetailFragment fragment = new AppointmentDetailFragment();
-//			fragment.setArguments(arguments);
-//			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//			transaction.replace(R.id.appointment_detail_container, fragment);
-//			transaction.commit();
-//		} else {
+
         Log.e("ReservationsForDayActivity", "onreservationSelected");
         if(id<9999999) { // fixme: please make this better
             Intent intent = new Intent(getApplicationContext(), ReservationDetailActivity.class);
@@ -111,7 +100,7 @@ public class ReservationsForDayActivity extends FragmentActivity implements Rese
             Intent intent = new Intent(getApplicationContext(), AddReservationActivity.class);
             String tempId = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
             String tempName =""+ getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
-           // Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempId);
+
             intent.putExtra(Constants.MEETINGROOM_ID, tempId);
             intent.putExtra(Constants.MEETINGROOM_NAME, tempName);
             startActivity(intent);

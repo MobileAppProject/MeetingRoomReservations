@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -41,8 +40,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
 
     private static final int LOADER_RESERVATIONS = 1;
-
-    SimpleCursorAdapter adapter;
 
     TextView dateView;
     TextView startView;
@@ -79,30 +76,12 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
 
-//
-//        mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(String.valueOf(R.string.pref_key_mode_list), "");
-//        defaultvalue = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(getApplicationContext().getString(R.string.pref_key_mode_input), "");
 
-        mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode", ""); //fixme: don't use literla strings
+        mode = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode", ""); //fixme: don't use literal strings
         defaultvalue = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode_input", "");
         Log.e(" preference values: ", "mode: " + mode + ", value: " + defaultvalue);
 
-
-
         getLoaderManager().initLoader(LOADER_RESERVATIONS, null, this);
-
-        //modify this to retrieve saved username
-       /* Spinner doctor = (Spinner) findViewById(R.id.add_appointment_doctor);
-        String[] columns = new String[1];
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(Constants.PREFERENCES_VALUE_FIRST_NAME.equals(preferences.getString(Constants.PREFERENCES_KEY, Constants.PREFERENCES_VALUE_LAST_NAME))) {
-            columns[0] = DB.DOKTERS.FIRSTNAME;
-        } else {
-            columns[0] = DB.DOKTERS.LASTNAME;
-        }
-        int[] to = new int[] { android.R.id.text1 };*/
-
-
 
         dateView = (TextView) findViewById(R.id.add_reservation_date);
         startView = (TextView) findViewById(R.id.add_reservation_begin_time);
@@ -156,7 +135,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
         }
         else{
-            Log.e("bundle extras is null", "sdfsdf");
+            Log.e("bundle extras is null", "");
         }
 
         setTitle(savedMeetingRoomName);
@@ -208,7 +187,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                         e.printStackTrace();
                     }
 
-                    Log.e("DATE: ", dateView.getText().toString());
                     new DatePickerDialogFragment(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datepicker");
                 }else
                 {
@@ -227,7 +205,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Log.e("BEGIN TIME: ", startView.getText().toString());
                     TimePickerDialogFragment.newInstance(startTimeListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)).show(getFragmentManager(), "startpicker");
                 }else{
                     TimePickerDialogFragment.newInstance(startTimeListener, beginHour, beginMinutes).show(getFragmentManager(), "startpicker");
@@ -245,7 +222,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    Log.e("END TIME: ", endView.getText().toString());
                     TimePickerDialogFragment.newInstance(endTimeListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)).show(getFragmentManager(), "endpicker");
                 }else{
                     TimePickerDialogFragment.newInstance(endTimeListener, endHour, endMinutes).show(getFragmentManager(), "endpicker");
@@ -292,8 +268,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
     class SaveTask extends AsyncTask<String, Integer, String> {
 
-        be.vdab.project.meetingroomreservations.Model.Reservation[] reservations;
-
         @Override
         protected String doInBackground(String... params) {
             try {
@@ -326,7 +300,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
             Log.e("time:",time);
             Log.e("timezone", TimeZone.getDefault().toString());
 
-            return date+"T"+time+":00+0200"; //todo: + timezone: TimeZone.getDefault()
+            return date+"T"+time+":00+0200";
         }
 
         @Override
@@ -340,8 +314,6 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
 
         class EditTask extends AsyncTask<String, Integer, String> {
 
-            be.vdab.project.meetingroomreservations.Model.Reservation[] reservations;
-
             @Override
             protected String doInBackground(String... params) {
                 try {
@@ -352,25 +324,17 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
                     meetingRoom.setMeetingRoomId(savedMeetingRoomId);
                     meetingRoom.setName(savedMeetingRoomName);
 
-
-
                     ReservationDTO rezzy = new ReservationDTO();
                     rezzy.setMeetingRoom(meetingRoom);
                     String beginDate = makeDateTimeString(params[0],params[1]);
-                    //String[] stringParts = beginDate.split(" ");
-                    Log.e("beginDate: ", beginDate);
 
                     rezzy.setBeginDate(beginDate);
                     String endDate = makeDateTimeString(params[0], params[2]);
-                    //stringParts = endDate.split(" ");
-                    Log.e("endDate: ", endDate);
                     rezzy.setEndDate(endDate);
-                    Log.e("description: ", params[4]);
                     rezzy.setDescription(params[4]);
-                    Log.e("personName: ", params[3]);
                     rezzy.setPersonName(params[3]);
 
-                    //TODO: Still throwing MalformedJsonException, however it works
+                    //fixme: Still throwing MalformedJsonException, however it works
                     restTemplate.put("http://192.168.56.1:8080/restSprintStarter/data/reservations/updateReservation/" + savedReservationId, rezzy, String.class);
 
                 } catch (Exception e) {
@@ -384,7 +348,7 @@ public class AddReservationActivity extends Activity implements DatePickerDialog
             Log.e("time:",time);
             Log.e("timezone", TimeZone.getDefault().toString());
 
-            return date+"T"+time+":00.000Z"; //todo: + timezone: TimeZone.getDefault()
+            return date+"T"+time+":00.000Z";
         }
 
         @Override

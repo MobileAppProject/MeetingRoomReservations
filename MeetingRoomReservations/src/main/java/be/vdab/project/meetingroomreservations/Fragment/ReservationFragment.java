@@ -123,8 +123,6 @@ public class ReservationFragment extends ListFragment implements
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 
-               // Toast.makeText(getActivity(), "postion: " + id, Toast.LENGTH_SHORT).show();
-
                 Uri reservationURI = CONTENT_URI_RESERVATION;
                 String[] projection = {DB.RESERVATIONS.ID, DB.RESERVATIONS.reservationId, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName, DB.RESERVATIONS.description};
                 String selection = DB.RESERVATIONS.ID + "  = ?";
@@ -145,12 +143,6 @@ public class ReservationFragment extends ListFragment implements
                 res.setPersonName(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.personName)));
                 res.setDescription(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.description)));
 
-
-
-
-
-
-
                 return true;
             }
         });
@@ -159,7 +151,6 @@ public class ReservationFragment extends ListFragment implements
     private void delete(String meetingRoomIdString) {
         DeleteOrEditConfirmationDialogFragment fragment = DeleteOrEditConfirmationDialogFragment.newInstance(this);
         fragment.show(getFragmentManager(), "deleteconfirmation");
-
 
     }
 
@@ -171,13 +162,6 @@ public class ReservationFragment extends ListFragment implements
 		listener.onReservationSelected(id);
 
 	}
-	
-	/*public void setActivateOnItemClick(boolean activateOnItemClick) {
-		ListView list = (ListView) view.findViewById(android.R.id.list);
-		list.setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
-	}*/
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -231,7 +215,6 @@ public class ReservationFragment extends ListFragment implements
 		public void onReservationSelected(Long id) {
 		}
 	};
-
 
     class DeleteTask extends AsyncTask<String, Integer, String> {
 

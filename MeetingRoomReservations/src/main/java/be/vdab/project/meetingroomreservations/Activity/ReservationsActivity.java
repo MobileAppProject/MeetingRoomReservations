@@ -13,10 +13,6 @@ import be.vdab.project.meetingroomreservations.R;
 
 public class ReservationsActivity extends Activity implements ReservationFragment.Callbacks{
 
-	private boolean dualPaneMode;
-
-
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,15 +68,7 @@ public class ReservationsActivity extends Activity implements ReservationFragmen
 
 	@Override
 	public void onReservationSelected(Long id) {
-//		if(dualPaneMode) {
-//			Bundle arguments = new Bundle();
-//			arguments.putLong(Constants.APPOINTMENT_ID, id);
-//			AppointmentDetailFragment fragment = new AppointmentDetailFragment();
-//			fragment.setArguments(arguments);
-//			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//			transaction.replace(R.id.appointment_detail_container, fragment);
-//			transaction.commit();
-//		} else {
+
         Log.e("ReservationsActivity", "onreservationSelected");
         Intent intent = new Intent(getApplicationContext(), ReservationDetailActivity.class);
         intent.putExtra(Constants.RESERVATION_ID, id.intValue()); // todo: send whole Reservation?

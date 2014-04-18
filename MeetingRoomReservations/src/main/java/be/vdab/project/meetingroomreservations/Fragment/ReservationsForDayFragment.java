@@ -79,7 +79,6 @@ public class ReservationsForDayFragment extends ListFragment implements
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         view = inflater.inflate(R.layout.fragment_reservations_for_day, container, false);
-        Log.e("In oncreateView: ", "");
 
         tvDay = (TextView) view.findViewById(R.id.tvDay);
         tvDay.setText(DateHelper.formatDayFromMilis(givenDate));
@@ -114,10 +113,6 @@ public class ReservationsForDayFragment extends ListFragment implements
        getActivity().getLoaderManager().initLoader(LOADER_RESERVATIONSFORDAY, null, this);
 
        adapter = new CustomCursorReservationsForDayAdapter(getActivity(), null, 0); //todo: use the correct rows put into a MatrixCursor and show this with the adapter
-        Log.e("IN ONCREATEVIEW", "ADAPTER SHOULD NOT BE NULL HERE: " + adapter);
-
-
-
 
 		ListView list = (ListView) view.findViewById(android.R.id.list);
 		list.setAdapter(adapter);
@@ -158,7 +153,6 @@ public class ReservationsForDayFragment extends ListFragment implements
     @Override
     public void onDelete() {
         new DeleteTask().execute();
-
     }
 
     @Override
@@ -191,8 +185,6 @@ public class ReservationsForDayFragment extends ListFragment implements
         this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
 
-               // Toast.makeText(getActivity(), "postion: " + id, Toast.LENGTH_SHORT).show();
-
                 Uri reservationURI = CONTENT_URI_RESERVATION;
                 String[] projection = {DB.RESERVATIONS.ID, DB.RESERVATIONS.reservationId, DB.RESERVATIONS.meetingRoomId, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.personName, DB.RESERVATIONS.description};
                 String selection = DB.RESERVATIONS.ID + "  = ?";
@@ -223,8 +215,6 @@ public class ReservationsForDayFragment extends ListFragment implements
     private void delete(String meetingRoomIdString) {
         DeleteOrEditConfirmationDialogFragment fragment = DeleteOrEditConfirmationDialogFragment.newInstance(this);
         fragment.show(getActivity().getFragmentManager(), "deleteconfirmation");
-
-
     }
 
 
@@ -235,13 +225,6 @@ public class ReservationsForDayFragment extends ListFragment implements
 		listener.onReservationSelected(id);
 
 	}
-	
-	/*public void setActivateOnItemClick(boolean activateOnItemClick) {
-		ListView list = (ListView) view.findViewById(android.R.id.list);
-		list.setChoiceMode(
-				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
-						: ListView.CHOICE_MODE_NONE);
-	}*/
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -266,15 +249,13 @@ public class ReservationsForDayFragment extends ListFragment implements
             tomorrow.set(tomorrow.toMillis(false)+(_24_HOURS_IN_MILIS));
         }
 
-
-        Log.e("start of today in millis: ", "" + new Date(now.toMillis(false)));
-        Log.e("start of tomorrow in millis: ", "" + new Date(tomorrow.toMillis(false)));
+        Log.v("start of today in millis: ", "" + new Date(now.toMillis(false)));
+        Log.v("start of tomorrow in millis: ", "" + new Date(tomorrow.toMillis(false)));
         String[] selectionArgs = {""+now.toMillis(false), ""+tomorrow.toMillis(false)} ;
 
 		CursorLoader cursorLoader = new CursorLoader(getActivity().getApplicationContext(),
 				ReservationsContentProvider.CONTENT_URI_RESERVATION, projection, selection,
 				selectionArgs, DB.RESERVATIONS.beginDate + " ASC");
-
 
 		return cursorLoader;
 	}
@@ -283,10 +264,6 @@ public class ReservationsForDayFragment extends ListFragment implements
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         MatrixCursor matrixCursor = new MatrixCursor(new String[] {  DB.RESERVATIONS.personName, DB.RESERVATIONS.beginDate, DB.RESERVATIONS.endDate, DB.RESERVATIONS.description, DB.RESERVATIONS.ID});
-        Log.e("matrixCursor", matrixCursor.toString());
-
-
-
 
         long begin = 0;
         long end;
@@ -323,11 +300,6 @@ public class ReservationsForDayFragment extends ListFragment implements
         }
 
         matrixCursor.addRow(new Object[] { " ",end, tomorrow.toMillis(false), getResources().getString(R.string.make_reservation_here) , id++ });
-
-        Log.e("fhdsuifhfgs", "dkjfhdjkshfdfhsu");
-
-      //  adapter = new CustomCursorReservationsForDayAdapter(getActivity(), matrixCursor, 0); //todo: use the correct rows put into a MatrixCursor and show this with the adapter
-
 
         adapter.swapCursor(matrixCursor);
 	}

@@ -19,14 +19,6 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_meetingrooms);
-		
-		/*if (findViewById(R.id.reservation_detail_container) != null) {
-			dualPaneMode = true;
-
-			// In dual-pane mode worden items 'geactiveerd' wanneer we er op klikken
-			((ReservationFragment) getFragmentManager().findFragmentById(
-					R.id.appointment_list)).setActivateOnItemClick(true);
-		}*/
 
 	}
 
@@ -51,22 +43,12 @@ public class MeetingRoomsActivity extends Activity implements MeetingRoomFragmen
 	@Override
 	public void onMeetingRoomSelected(Long id, String meetingRoomName) {
         Log.e("TESTING PREFERENCES", "pref: " + PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("mode", ""));
-		/*if(dualPaneMode) {
-			Bundle arguments = new Bundle();
-			arguments.putLong(Constants.APPOINTMENT_ID, id);
-			AppointmentDetailFragment fragment = new AppointmentDetailFragment();
-			fragment.setArguments(arguments);
-			FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-			transaction.replace(R.id.appointment_detail_container, fragment);
-			transaction.commit();
-		} else {*/
+
 			Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
 			intent.putExtra(Constants.MEETINGROOM_ID, id);
             intent.putExtra(Constants.MEETINGROOM_NAME, meetingRoomName);
             Log.e("MeetingRoomActivity onMeetingRoomSelected: ", Long.toString(id) + ", " + meetingRoomName);
 			startActivity(intent);
 		}
-		
-	//}
 
 }

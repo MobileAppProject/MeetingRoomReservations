@@ -158,6 +158,7 @@ public class CalendarAdapter extends BaseAdapter{
 				if(colors.contains(1)){
 					red.setVisibility(View.VISIBLE);
                     red.setTranslationX(-17);
+                    red.setTranslationY(50);
 				}
 
 			}else{

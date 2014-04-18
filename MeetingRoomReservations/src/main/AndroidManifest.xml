@@ -19,11 +19,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="be.vdab.project.meetingroomreservations.Activity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-        </activity>
-        <activity
             android:name="be.vdab.project.meetingroomreservations.Activity.ReservationsActivity"
             android:label="@string/ReservationTitle"
             android:windowSoftInputMode="adjustResize|stateVisible" >

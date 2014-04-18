@@ -31,8 +31,6 @@ import be.vdab.project.meetingroomreservations.extendedcalendarview.ExtendedCale
 
 import static be.vdab.project.meetingroomreservations.db.ReservationsContentProvider.CONTENT_URI_RESERVATION;
 
-//Calendar stuff
-
 public class ExtendedCalendarActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExtendedCalendarView.OnDayClickListener {
 
     @Override
@@ -61,9 +59,7 @@ public class ExtendedCalendarActivity extends FragmentActivity implements Loader
         Log.e("testing calendar oncreate", "");
 
 
-        //todo: cursor seems to be empty, calendar does not get filled
         while (cursor.moveToNext()) {
-            //  cal.set(2014, 3, 16, 10, 30);
             cal.setTimeInMillis(Long.parseLong(cursor.getString(cursor.getColumnIndex(DB.RESERVATIONS.beginDate))));
             values.put(CalendarProvider.START, cal.getTimeInMillis());
             TimeZone tz = TimeZone.getDefault();
@@ -72,8 +68,6 @@ public class ExtendedCalendarActivity extends FragmentActivity implements Loader
 
             values.put(CalendarProvider.START_DAY, beginDayJulian);
 
-
-            // cal.set(2014, 3, 16, 12, 30);
             int endDayJulian = Time.getJulianDay(cal.getTimeInMillis(), TimeUnit.MILLISECONDS.toSeconds(tz.getOffset(cal.getTimeInMillis())));
 
             values.put(CalendarProvider.END, cal.getTimeInMillis());
@@ -132,14 +126,12 @@ public class ExtendedCalendarActivity extends FragmentActivity implements Loader
 
     @Override
     public void onDayClicked(AdapterView<?> adapter, View view, int position, long id, Day day) {
-        Log.e("OnDayClickListener", "PLease make htis work");
         Calendar cal = Calendar.getInstance();
         cal.set(day.getYear(), day.getMonth(), day.getDay());
 
         Intent intentReservationsForDay = new Intent(getApplicationContext(), ReservationsForDayActivity.class);
         String tempMeetingRoomId = ""+getIntent().getExtras().get(Constants.MEETINGROOM_ID);
         String tempMeetingRoomName =""+ getIntent().getExtras().get(Constants.MEETINGROOM_NAME);
-        Log.e("MeetingRoomActivity in ReservationsActivity: ",  "string so it's not null: " + tempMeetingRoomId);
         intentReservationsForDay.putExtra(Constants.MEETINGROOM_ID, tempMeetingRoomId);
         intentReservationsForDay.putExtra(Constants.MEETINGROOM_NAME, tempMeetingRoomName);
         intentReservationsForDay.putExtra("date_to_show", cal);

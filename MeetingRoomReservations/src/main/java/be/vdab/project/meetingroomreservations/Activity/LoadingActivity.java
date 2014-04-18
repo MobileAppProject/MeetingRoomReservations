@@ -43,7 +43,6 @@ public class LoadingActivity extends Activity {
 
 		@Override
 	    protected void onPostExecute(String value) {
-			//Intent intent = new Intent(getApplicationContext(), ReservationsActivity.class);
             Intent intent = new Intent(getApplicationContext(), MeetingRoomsActivity.class);
 			startActivity(intent);
 			finish();
